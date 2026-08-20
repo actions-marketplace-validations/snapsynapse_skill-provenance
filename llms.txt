@@ -29,7 +29,7 @@ Most ecosystem tools track source, registry, install, or deployment state. Skill
 
 - Canonical site: https://skillprovenance.dev/
 - GitHub: https://github.com/snapsynapse/skill-provenance
-- ClawHub: https://clawhub.ai/snapsynapse/skill-provenance
+- ClawHub: https://clawhub.ai/snapsynapse/skills/skill-provenance
 - Skill definition: https://github.com/snapsynapse/skill-provenance/blob/main/skill-provenance/SKILL.md
 - Changelog: https://github.com/snapsynapse/skill-provenance/blob/main/CHANGELOG.md
 - [Assistant Guide](https://skillprovenance.dev/.well-known/assistant-guide.txt): bounded assistant install and integrity-check instructions

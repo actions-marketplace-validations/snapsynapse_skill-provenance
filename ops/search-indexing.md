@@ -9,15 +9,18 @@ open_tasks: []
 ---
 # Search indexing
 
-Canonical origin: `https://skillprovenance.dev/`
+## Property identity and boundaries
 
-Console property ID: `sc-domain:skillprovenance.dev`
+| Field | Value |
+|---|---|
+| Canonical origin | `https://skillprovenance.dev/` |
+| Console property | Google Search Console `sc-domain:skillprovenance.dev` |
+| Property mode | Website |
+| Owning repository | `snapsynapse/skill-provenance` |
+| Deployable artifact | Repository root `.` |
+| Deployment | GitHub Pages legacy build from `main` `/`, custom domain, HTTPS enforced |
 
-Property mode: `website`
-
-Generated output: `.`
-
-If deployment assembles a separate staging directory, this path must name that exact deployable artifact, not its source directory.
+The repository root is both source and deployable static artifact. If that deployment configuration changes, update `search-audit.config.json` and this policy before relying on either validation lane.
 
 ## Index policy
 
@@ -28,6 +31,16 @@ If deployment assembles a separate staging directory, this path must name that e
 | `/robots.txt`, `/sitemap.xml`, `/llms.txt` | Crawlable and omitted from the page sitemap | Search and agent discovery surfaces |
 | `/.well-known/assistant-guide.txt` and sidecar | Crawlable and omitted from the page sitemap | Bounded agent verification surfaces |
 | GitHub, ClawHub, and other external copies | Omit from this sitemap | Distribution copies are not site canonical pages |
+
+The site has one English canonical HTML page. Multilingual indexing, locale canonicals, and `hreflang` are not applicable unless additional localized pages are deliberately published.
+
+## Evidence governance
+
+- This file is the living property policy and action ledger.
+- Sanitized dated observations belong under `ops/search/<provider>/YYYY-MM-DD/`.
+- Raw exports, authenticated screenshots, traces, browser state, account identity, and private queries must remain outside Git or under ignored `.search-evidence-private/` and `.playwright-mcp/` directories.
+- Console absence, an uninspected report, a stale report, insufficient data, and a measured zero are different states. Record the observed state without filling gaps by inference.
+- New individual URL Inspection evidence overrides older aggregate evidence for that URL. An accepted action records provider receipt, not completion.
 
 ## Validation lanes
 
@@ -63,10 +76,19 @@ For a creator-profile or external-platform property, replace the website validat
 
 ## Current baseline
 
-- Repository, generated output, and production matched before the 2026-08-20 console action.
-- Production canonical, robots, sitemap, JSON-LD, assistant files, redirects, and hosted 404 behavior passed the property gate.
-- Google Search Console reported `Success`, last read 2026-08-20, with one discovered page.
-- The homepage was individually reported indexed. Provider recrawl latency remains expected after later deployments.
+Detailed evidence: [`ops/search/GoogleSearchConsole/2026-08-20/audit.md`](search/GoogleSearchConsole/2026-08-20/audit.md)
+
+| Lane | Evidence date | Classified state |
+|---|---|---|
+| Repository and generated output | 2026-08-20 | Pass: one sitemap HTML page, zero defects, zero infrastructure failures |
+| Production | 2026-08-20 | Pass: canonical, robots, sitemap, JSON-LD, agent discovery files, redirects, and hosted 404 behavior matched the contract |
+| Google Search Console sitemap | 2026-08-20 | `Success`; last read 2026-08-20; one discovered page |
+| Google Search Console URL Inspection | 2026-08-20 | Homepage individually reported indexed |
+| Aggregate Page indexing counts and reason groups | 2026-08-20 | Unknown: not captured in the available evidence |
+| Other GSC reports and exports | 2026-08-20 | Not captured; do not interpret as zero or clean |
+| Active validation batches | 2026-08-20 | None observed or recorded in this property task; no new inspection was performed for this reconciliation |
+
+The repository and production evidence support a passing implementation. Later provider recrawl or aggregate-report changes remain subject to ordinary provider lag.
 
 ## Console action ledger
 
@@ -74,6 +96,27 @@ Read this table before opening the console. Add only observed actions and confir
 
 | Provider and property | Action and target | Accepted at | Confirmation | Result class | Repeat policy | Next review |
 |---|---|---|---|---|---|---|
-| Google Search Console, `sc-domain:skillprovenance.dev` | Resubmit `https://skillprovenance.dev/sitemap.xml` | 2026-08-20 | Sitemap detail showed `Success`, last read 2026-08-20, one discovered page | Accepted submission, not proof of future recrawl or indexing | Do not repeat until a later deployed material revision is absent from provider state or GSC names a failure | After the next authorized production deployment and normal provider lag |
+| Google Search Console, `sc-domain:skillprovenance.dev` | Resubmit `https://skillprovenance.dev/sitemap.xml` | 2026-08-20; time not recorded | Sitemap detail showed `Success`, last read 2026-08-20, one discovered page | Accepted submission, not proof of future recrawl or indexing | Do not repeat while this accepted state remains current | When the sitemap Last read advances, GSC names a sitemap failure, a materially deployed revision remains absent after normal provider lag, or a repository/production gate fails |
 
 Keep rejected attempts and unknown outcomes distinct from accepted actions. Do not repeat an accepted action merely because the provider report remains stale.
+
+## Do not repeat
+
+- Do not resubmit `https://skillprovenance.dev/sitemap.xml` while the accepted 2026-08-20 state remains current.
+- Do not request indexing for the already indexed homepage without newer contradictory evidence and a passing production gate.
+- Do not start validation for intentional redirects, the noindex error page, machine-readable files omitted from the HTML sitemap, or a reason group that was not actually observed.
+- Do not treat provider lag, missing aggregate counts, or absent exports as a repository defect.
+- Do not store authenticated browser artifacts or private Search Console data in Git.
+
+## Next review conditions
+
+Review this property only when at least one condition is true:
+
+- the sitemap Last read advances beyond 2026-08-20;
+- Page indexing or URL Inspection produces newer evidence;
+- GSC names a sitemap, indexing, security, manual-action, HTTPS, or enhancement issue;
+- a material canonical HTML revision is deployed and remains absent after normal provider lag;
+- the repository or production search validator fails; or
+- deployment source, canonical origin, or index policy changes.
+
+At the next authorized review, re-run repository and production gates before any console mutation, inspect only the reports needed by the trigger, update the dated evidence, and keep accepted requests out of the retry queue.

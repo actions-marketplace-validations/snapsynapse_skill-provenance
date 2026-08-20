@@ -1,11 +1,11 @@
 [![Validate bundle](https://github.com/snapsynapse/skill-provenance/actions/workflows/validate.yml/badge.svg)](https://github.com/snapsynapse/skill-provenance/actions/workflows/validate.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://github.com/snapsynapse/skill-provenance/blob/main/LICENSE)
 [![Latest release](https://img.shields.io/github/v/release/snapsynapse/skill-provenance)](https://github.com/snapsynapse/skill-provenance/releases/latest)
-[![ClawHub](https://img.shields.io/badge/ClawHub-skill--provenance-blue)](https://clawhub.ai/snapsynapse/skill-provenance)
+[![ClawHub](https://img.shields.io/badge/ClawHub-skill--provenance-blue)](https://clawhub.ai/snapsynapse/skills/skill-provenance)
 [![ProSkills.md](https://img.shields.io/badge/ProSkills.md-8.41%2F10-brightgreen)](https://proskills.md)
-[![ClawHub installs](https://img.shields.io/badge/ClawHub-400%2B%20installs-blue)](https://clawhub.ai/snapsynapse/skill-provenance)
+[![ClawHub installs](https://img.shields.io/badge/ClawHub-1k%2B%20downloads-blue)](https://clawhub.ai/snapsynapse/skills/skill-provenance)
 [![Awesome OpenClaw Skills](https://img.shields.io/badge/Awesome%20OpenClaw-Skills-blueviolet)](https://github.com/VoltAgent/awesome-openclaw-skills)
-[![OpenClaw scan](https://img.shields.io/badge/OpenClaw-Benign%20%E2%80%93%20High%20Confidence-brightgreen)](https://clawhub.ai/snapsynapse/skill-provenance)
+[![ClawHub security audit](https://img.shields.io/badge/ClawHub-security%20audit-blue)](https://clawhub.ai/snapsynapse/skills/skill-provenance/security-audit)
 
 # Skill Provenance
 
@@ -125,7 +125,7 @@ Some cross-client tooling also recognizes `.agents/skills/`. The same
 directory bundle can be placed there when you want a neutral install path.
 
 **ClawHub:**
-`clawhub install skill-provenance`
+`openclaw skills install @snapsynapse/skill-provenance`
 
 **GitHub Actions Marketplace:**
 ```yaml

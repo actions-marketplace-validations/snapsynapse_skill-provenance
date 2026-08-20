@@ -41,7 +41,7 @@ description (see the `SKILL_v4.md` → `SKILL.md`/`MANIFEST.yaml` snippet in
 
 - Canonical site: https://skillprovenance.dev/
 - Repo: https://github.com/snapsynapse/skill-provenance
-- ClawHub listing: https://clawhub.ai/snapsynapse/skill-provenance
+- ClawHub listing: https://clawhub.ai/snapsynapse/skills/skill-provenance
 - Assistant guide (pre-install verification): https://skillprovenance.dev/.well-known/assistant-guide.txt
 - Releases: https://github.com/snapsynapse/skill-provenance/releases
 
