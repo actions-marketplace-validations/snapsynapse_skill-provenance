@@ -1,9 +1,11 @@
 ---
+name: validate
 description: >
   Run a focused validation check for a skill bundle. Use when the user asks
   to validate, verify hashes, check MANIFEST.yaml, confirm files are present,
   or distinguish a canonical bundle from a derived install or registry copy
   without opening or closing a full editing session.
+license: MIT
 ---
 
 # Skill Provenance: Validate

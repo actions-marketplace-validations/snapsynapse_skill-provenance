@@ -2,9 +2,8 @@
 
 ## Now
 
-- Publish the prepared 6.0.0 manifest-boundary hardening release after
-  review: constrained inventory grammar, path containment, duplicate-path
-  rejection, symlink rejection, and package-boundary revalidation.
+- Review and publish the prepared 6.1.0 discovery and search-contract release
+  only after explicit commit, deployment, release, and registry authorization.
 - Ship a standalone zero-install verifier and bootstrap path for authors
   who do not use the Claude Code plugin.
 - Refresh the July 2026 ecosystem evidence before publishing the State of

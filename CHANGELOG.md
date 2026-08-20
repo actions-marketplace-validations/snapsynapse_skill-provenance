@@ -7,6 +7,42 @@ The in-bundle file at `skill-provenance/CHANGELOG.md` is the active changelog
 that travels with the skill bundle and keeps only the five most recent entries
 to limit package weight. Older history remains here in the repo root.
 
+## 6.1.0 - 2026-08-20
+- skill-provenance/SKILL.md, skill-provenance/agents/openai.yaml,
+  skill-provenance/references/packaging-and-changelog.md, and
+  skill-provenance/references/platforms-and-trust.md: Improved concrete agent
+  triggering, added OpenAI interface metadata, and moved deep package and
+  platform guidance into direct references so the canonical body stays under
+  500 lines.
+- skill-provenance/README.md and root README.md: Added pinned GitHub CLI
+  preview and Codex installation guidance, documented the Codex plugin
+  package, and avoided claims of unpublished marketplace availability.
+- skills/open/SKILL.md, skills/validate/SKILL.md, skills/close/SKILL.md,
+  skills/handoff/SKILL.md, and skills/bootstrap/SKILL.md: Added the names and
+  licenses required for GitHub Agent Skill publication validation while
+  preserving existing Claude plugin command names.
+- .codex-plugin/plugin.json and .claude-plugin/plugin.json: Added the Codex
+  plugin package and advanced the Claude plugin patch version for synchronized
+  discovery metadata.
+- search-audit.config.json, scripts/check-search.mjs,
+  scripts/check-production-search.mjs, ops/search-indexing.md,
+  .github/workflows/validate.yml, and
+  .github/workflows/production-search.yml: Added deterministic repository and
+  manually triggered production search contracts plus the dated GSC action
+  ledger.
+- .well-known/assistant-guide.txt and its sidecar: Advanced the guide to 1.2.0,
+  repaired its cloned-repository working directory, updated bundle
+  applicability to 6.1.x, and refreshed its hash and planned immutable release
+  metadata.
+- index.html, sitemap.xml, AGENTIC_SURFACES.md, PROJECT_CONTEXT.md, CLAUDE.md,
+  and ROADMAP.md: Updated public discovery copy, modified dates, surface
+  disclosures, current state, and release sequencing.
+- skill-provenance/MANIFEST.yaml, skill-provenance/CHANGELOG.md, and
+  skill-provenance.skill: Prepared bundle 6.1.0, advanced file revisions,
+  refreshed hashes and rolling history, and rebuilt the derived archive.
+- skill-provenance/evals.json and skill-provenance/evals-distribution.json:
+  Unchanged because the operational contracts remain semantically unchanged.
+
 ## 6.0.0 - 2026-07-21
 - skill-provenance/validate.sh: Added a constrained, fail-closed inventory
   grammar; rejected absolute and non-normalized paths, parent traversal,

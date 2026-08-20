@@ -70,9 +70,9 @@ Test locally: `claude --plugin-dir .`
 
 `.github/workflows/validate.yml` runs on push/PR to `main`: verifies bundle hashes via the repo's own `action.yml`, test-builds the strict and ClawHub packages, runs `release-surface-check.sh`, `action-security-check.sh`, and `test-validate.sh`. All are bash scripts under `.github/scripts/` and `skill-provenance/`.
 
-## Current state (as of 2026-07-21 assessment)
+## Current state (as of 2026-08-20 assessment)
 
-- Bundle source is prepared for `6.0.0` manifest-boundary hardening. It is
+- Bundle source is being prepared for `6.1.0` discovery and search-contract improvements. It is
   not committed, tagged, pushed, or published without explicit release
   authorization.
 - Validation fails closed on unsafe or ambiguous paths, duplicates, missing

@@ -1,4 +1,5 @@
 ---
+name: bootstrap
 description: >
   Add version tracking to an existing unversioned skill bundle. Use when
   you have a skill project with SKILL.md but no MANIFEST.yaml, no version
@@ -6,6 +7,7 @@ description: >
   metadata to files, and generates the first changelog entry. Triggers on:
   "bootstrap this skill", "add versioning", "start tracking versions",
   "create a manifest", "this skill has no versioning".
+license: MIT
 ---
 
 # Skill Provenance: Bootstrap

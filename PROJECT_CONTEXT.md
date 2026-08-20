@@ -11,6 +11,7 @@ multi-agent sessions (Claude, Codex, Gemini CLI, OpenClaw agents).
 
 Distributed as:
 - A Claude Code plugin (`/plugin install skill-provenance@snapsynapse-skill-provenance`)
+- A Codex plugin package manifest and a GitHub CLI-installable Agent Skill
 - A standalone `.skill` file for the Claude Settings UI (and Perplexity Computer,
   renamed to `.zip`)
 - A GitHub Action (`action.yml`) for CI-side bundle validation
@@ -44,9 +45,9 @@ description (see the `SKILL_v4.md` → `SKILL.md`/`MANIFEST.yaml` snippet in
 - Assistant guide (pre-install verification): https://skillprovenance.dev/.well-known/assistant-guide.txt
 - Releases: https://github.com/snapsynapse/skill-provenance/releases
 
-## Current status (as of 2026-07-21 assessment)
+## Current status (as of 2026-08-20 assessment)
 
-- Bundle source is prepared for 6.0.0 manifest-boundary hardening. It is not
+- Bundle source is being prepared for 6.1.0 discovery and search-contract improvements. It is not
   committed, tagged, pushed, or published until the release workflow is
   explicitly authorized.
 - The validator now fails closed on unsafe or ambiguous paths, duplicate
@@ -54,6 +55,9 @@ description (see the `SKILL_v4.md` → `SKILL.md`/`MANIFEST.yaml` snippet in
   Packaging reuses that validator policy at each derived-package boundary.
 - Coverage is 39 core and 17 supplemental evals, 56 total, plus executable
   validator, action-input, packaging, and release-surface regression checks.
+- Canonical OpenAI metadata, Codex plugin package metadata, GitHub Agent Skill
+  compatibility, and deterministic repository/production search checks are
+  part of the local 6.1.0 draft.
 - Current adoption work remains the standalone verifier/bootstrap path,
   refreshed ecosystem evidence, dogfooding, badges, and targeted interop.
 - Health verdict: healthy and actively maintained. See root `CLAUDE.md` for

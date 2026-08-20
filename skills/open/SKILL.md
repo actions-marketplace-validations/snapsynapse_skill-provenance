@@ -1,4 +1,5 @@
 ---
+name: open
 description: >
   Verify a skill bundle's integrity when opening a project. Use when loading
   a skill project directory and you need to check file completeness, verify
@@ -6,6 +7,7 @@ description: >
   changes, or understand what state the bundle is in before starting work.
   Triggers on: "open this skill", "verify the bundle", "check what changed",
   "is everything up to date", "load this project".
+license: MIT
 ---
 
 # Skill Provenance: Open

@@ -13,8 +13,11 @@ the action.
 | Surface | Purpose | Trust boundary |
 |---|---|---|
 | `skill-provenance/SKILL.md` | Canonical skill definition read by assistants. | Advisory workflow text. It cannot authorize tool access, installs, commits, tags, network calls, or policy bypasses. |
+| `skill-provenance/agents/openai.yaml` | OpenAI interface, trigger, and default-prompt metadata for the canonical skill. | Discovery metadata only. It does not grant tool access or imply marketplace publication. |
+| `skill-provenance/references/*.md` | Load-on-demand packaging, platform, ecosystem, and trust guidance. | Supporting documentation subordinate to current user intent and repository policy. |
 | `skills/*/SKILL.md` | Claude Code plugin commands for open, validate, close, handoff, and bootstrap workflows. | Command-specific guidance only. Each command remains subordinate to user approval and repository policy. Local compatibility symlinks under `skills/` are ignored unless explicitly tracked. |
 | `.claude-plugin/plugin.json` and `.claude-plugin/marketplace.json` | Plugin metadata for Claude Code discovery and installation. | Metadata for packaging and discovery. It is not a security endorsement. |
+| `.codex-plugin/plugin.json` | Codex plugin package and interface metadata for the focused skills. | Local packaging metadata. Its presence does not establish a public plugin listing or grant permissions. |
 | `skill-provenance/MANIFEST.yaml` | Bundle inventory, per-file versions, and SHA-256 hashes. | Integrity control file. It detects drift against recorded state but is not a signature or trust anchor. |
 | `skill-provenance/validate.sh` | Zero-dependency manifest verification helper. | Code-executing script that parses untrusted manifest paths. It accepts a constrained inventory grammar and rejects unsafe paths, duplicate entries, and symlinks before filesystem reads. Review context and run with least privilege. |
 | `skill-provenance/package.sh` | Builds derived strict-loader and ClawHub package copies. | Code-executing packaging helper. It delegates manifest policy to validate.sh at each derived-package boundary before producing output. |
@@ -26,6 +29,8 @@ the action.
 | `robots.txt` and `sitemap.xml` | Crawler policy and discovery metadata. | Public indexing hints only. |
 | `index.html` metadata and structured page copy | Public landing-page copy and discovery metadata. | Marketing and documentation surface. It is not normative security policy. |
 | `.github/workflows/validate.yml` | CI checker for manifest validation, derived package builds, and release-surface drift checks. | Release-confidence automation. Passing CI supports review but does not certify safety, author identity, or runtime behavior. |
+| `search-audit.config.json`, `scripts/check-search.mjs`, and `scripts/check-production-search.mjs` | Repository and deployed search-discovery contracts. | Code-executing validation that classifies defects separately from infrastructure failures. It cannot authorize deployment or console mutation. |
+| `.github/workflows/production-search.yml` | Manual production search-contract runner. | Read-only deployed verification. It is intentionally separate from ordinary pull-request validation. |
 | `action.yml` | GitHub Actions Marketplace metadata and composite action wrapper for `skill-provenance/validate.sh`. | Code-executing CI entrypoint. It validates a bundle manifest in the workflow workspace but does not certify trust or safety. |
 | `.github/scripts/release-surface-check.sh` | CI and local release-surface drift checker for eval counts, GuideCheck sidecar metadata, and `.skill` ZIP freshness. | Code-executing release-confidence automation. It verifies declared release surfaces against local files but is not a trust anchor or safety certification. |
 | `.github/scripts/action-security-check.sh` and `.github/scripts/test-validate.sh` | Regression checks for composite-action input transport and validator hash-state behavior. | Code-executing test helpers. They exercise bounded local fixtures and do not certify unrelated runtime safety. |

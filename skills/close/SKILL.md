@@ -1,4 +1,5 @@
 ---
+name: close
 description: >
   Update version tracking when finishing work on a skill bundle. Use when
   you're done editing a skill project and need to bump version headers,
@@ -6,6 +7,7 @@ description: >
   prepare a commit message. Triggers on: "close the session", "update
   versions", "save the bundle", "I'm done editing", "prepare to commit",
   "wrap up this skill session".
+license: MIT
 ---
 
 # Skill Provenance: Close

@@ -1,6 +1,6 @@
 bundle: skill-provenance
-bundle_version: 6.0.0
-bundle_date: 2026-07-21
+bundle_version: 6.1.0
+bundle_date: 2026-08-20
 description: >
   Metaskill for portable provenance, integrity, and drift control across
   Agent Skills local folders, registries, platform uploads, and multi-agent
@@ -95,19 +95,47 @@ validated_against:
       null-opt-out reporting, 1000-entry resource, strict package, and ClawHub
       package checks passed under Bash 5.3 and macOS system Bash 3.2.
       Attestation remains informational.
+  - bundle_version: 6.1.0
+    harness: OpenAI Codex desktop
+    model: GPT-5
+    date: 2026-08-20
+    result: pass
+    method: validate.sh verify + regression suite + skill and plugin validation + search contract + gh skill publish dry-run + release-surface-check.sh
+    notes: >
+      Canonical hashes, focused skill metadata, OpenAI metadata, Codex plugin
+      package, repository search contract, derived archive, regression suite,
+      and GitHub publication dry-run passed. Attestation remains informational.
 
 files:
   - path: SKILL.md
     role: skill
-    version: 23
-    hash: sha256:cffb5bf706c914813d3950be5c86d5d048b2b72bd6d2d1fb828fc6ca05410750
-    note: Canonical skill definition with constrained manifest grammar, exact package inventory, evidence-based staleness, malformed-attestation warnings, package validation gates, origin metadata, and full provenance metadata in frontmatter
+    version: 24
+    hash: sha256:d045e231cddc2e8a9021d5b9e4e30bdfe45278efd7a52cca8977d6e5542c4284
+    note: Canonical skill definition with action-led triggers, concise progressive disclosure, constrained manifest grammar, exact package inventory, evidence-based staleness, package validation gates, origin metadata, and provenance metadata in frontmatter
 
   - path: README.md
     role: reference
-    version: 26
-    hash: sha256:4ead7376384ca04c968509392f917462348ec8acb1b92574d4325389a7df6011
-    note: Human-facing instructions for constrained manifest paths, exact package inventory, fail-closed validation, update repair, malformed and stale attestation, packaging, trust model, and troubleshooting
+    version: 27
+    hash: sha256:a5ee22090d8da2e471565514d0233e197d60aacf166f241d38db66c43969d8dc
+    note: Human-facing instructions for GitHub CLI installation, OpenAI discovery metadata, constrained manifest paths, exact package inventory, fail-closed validation, packaging, trust, and troubleshooting
+
+  - path: agents/openai.yaml
+    role: agents
+    version: 1
+    hash: sha256:568181a56d4819901554fbd1ef25464097144ebd6aa79fd142aea85f8e0b51f6
+    note: OpenAI interface metadata with display name, short description, brand color, explicit default prompt, and implicit invocation policy
+
+  - path: references/packaging-and-changelog.md
+    role: reference
+    version: 1
+    hash: sha256:a6d178663d20e3862f11eccdf3bd0be9f4e42d9768f8a73164b4a7af68a79bc2
+    note: Load-on-demand package structure, exact inventory, and changelog format guidance
+
+  - path: references/platforms-and-trust.md
+    role: reference
+    version: 1
+    hash: sha256:dbd6a0e4b7035d0c9deb37e0a76b3385347b82a6d6b4d9bd4c2bee03956eac51
+    note: Load-on-demand canonical and derived states, platform notes, ecosystem boundaries, and trust guidance
 
   - path: evals.json
     role: evals
@@ -123,8 +151,8 @@ files:
 
   - path: CHANGELOG.md
     role: reference
-    version: 29
-    hash: sha256:0622bbc982356fb5da15ee5fa2bfaa43a19258b5fbc2f350c8925580554f8d07
+    version: 30
+    hash: sha256:ab2aede7090863a9477a733df295a070b5036f33d5768ac0865e6da49ae71568
     note: Active in-bundle changelog with the 5 most recent entries; older history lives in the repo root
 
   - path: validate.sh

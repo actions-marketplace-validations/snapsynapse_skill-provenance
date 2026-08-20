@@ -1,12 +1,11 @@
 ---
 skill_bundle: skill-provenance
 file_role: reference
-version: 26
-version_date: 2026-07-21
-previous_version: 25
+version: 27
+version_date: 2026-08-20
+previous_version: 26
 change_summary: >
-  Documented exact package inventory, malformed attestation warnings, and
-  the consolidated 6.0.0 validation and packaging contract.
+  Added pinned GitHub CLI installation and OpenAI discovery metadata guidance.
 ---
 
 # Skill Provenance - README
@@ -102,10 +101,14 @@ install the skill and does not prove the bundle is safe to run.
 | **Claude Chat** (project) | Add `SKILL.md` to the project knowledge. It will be available in every conversation within that project. |
 | **Claude Cowork** | Place the `skill-provenance/` folder in your Cowork skill directory. Claude will discover it automatically. |
 | **Claude Code** | Place the `skill-provenance/` folder in your project's skill directory (typically alongside other skills). Reference it in your CLAUDE.md if needed. |
-| **Codex** | Use a strict-platform copy in `~/.codex/skills/skill-provenance/` or a project skill directory. Generate one with `./package.sh strict`, or strip the SKILL.md `metadata` block manually. |
+| **Codex** | After v6.1.0 is released, preview with `gh skill preview snapsynapse/skill-provenance skill-provenance@v6.1.0`, then install with `gh skill install snapsynapse/skill-provenance skill-provenance@v6.1.0 --agent codex --scope user`. For a local derived copy, use `./package.sh strict`. |
 | **Gemini CLI** | Copy or symlink a strict-platform copy to `~/.gemini/skills/skill-provenance/` for user-wide availability, or `.gemini/skills/skill-provenance/` for a single project. `./package.sh strict` prepares the minimal-frontmatter variant. |
 | **Perplexity Computer** | Upload a `.zip` or folder copy when supported. For strict loaders, start from `./package.sh strict`, then rename `.skill` to `.zip` if needed and keep the trigger-rich description. |
 | **Generic agentskills clients** | Use the directory bundle directly. Some cross-client tooling also recognizes `.agents/skills/skill-provenance/` as a neutral install location. |
+
+The canonical bundle includes `agents/openai.yaml` for OpenAI interface and
+trigger metadata. The source repository also includes a root Codex plugin
+manifest. Neither file is evidence of a public marketplace listing.
 
 Treat the bundle as moving through three states:
 

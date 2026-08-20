@@ -1,0 +1,105 @@
+{
+  "$schema": "portfolio-search-indexing-audit/v4",
+  "contractVersion": 4,
+  "canonicalOrigin": "https://skillprovenance.dev/",
+  "outputDir": ".",
+  "sitemaps": [
+    "sitemap.xml"
+  ],
+  "minimumWords": 120,
+  "thinPageExemptions": [],
+  "expectedNoindex": [
+    "/404.html"
+  ],
+  "requireJsonLd": false,
+  "jsonLdRequiredPaths": [
+    "/"
+  ],
+  "lastmodAgreementPaths": [
+    "/"
+  ],
+  "compareRepositorySitemaps": true,
+  "internalSourceRules": [],
+  "requiredFiles": [
+    {
+      "path": "index.html",
+      "contentTypes": [
+        "text/html"
+      ],
+      "contains": [
+        "gh skill install snapsynapse/skill-provenance skill-provenance@v6.1.0 --agent codex --scope user"
+      ]
+    },
+    {
+      "path": "robots.txt",
+      "contentTypes": [
+        "text/plain"
+      ],
+      "contains": [
+        "Sitemap: https://skillprovenance.dev/sitemap.xml"
+      ]
+    },
+    {
+      "path": "sitemap.xml",
+      "contentTypes": [
+        "application/xml",
+        "text/xml"
+      ],
+      "contains": []
+    },
+    {
+      "path": "llms.txt",
+      "contentTypes": [
+        "text/plain"
+      ],
+      "contains": [
+        "Skill Provenance",
+        "https://github.com/snapsynapse/skill-provenance"
+      ]
+    },
+    {
+      "path": ".well-known/assistant-guide-manifest.txt",
+      "contentTypes": [
+        "text/plain"
+      ],
+      "contains": [
+        "guide-path: /.well-known/assistant-guide.txt",
+        "canonical-url: https://skillprovenance.dev/.well-known/assistant-guide.txt"
+      ]
+    },
+    {
+      "path": ".well-known/assistant-guide.txt",
+      "contentTypes": [
+        "text/plain"
+      ],
+      "contains": [
+        "Assistant Guide: Skill Provenance",
+        "canonical-url: https://skillprovenance.dev/.well-known/assistant-guide.txt"
+      ]
+    }
+  ],
+  "redirects": [
+    {
+      "from": "http://skillprovenance.dev/",
+      "to": "https://skillprovenance.dev/"
+    },
+    {
+      "from": "https://www.skillprovenance.dev/",
+      "to": "https://skillprovenance.dev/"
+    },
+    {
+      "from": "http://www.skillprovenance.dev/",
+      "to": "https://skillprovenance.dev/"
+    }
+  ],
+  "hosted404Patterns": [
+    "This page doesn't exist.",
+    "There isn't a GitHub Pages site here",
+    "<title>Page not found",
+    "404 File not found",
+    "<title>Page not found — Skill Provenance</title>"
+  ],
+  "expectedNotFoundPaths": [
+    "/__search-audit-404__"
+  ]
+}

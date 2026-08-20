@@ -78,6 +78,20 @@ guide to verify the bundle fetch and manifest integrity:
 The guide is a bounded, human-verifiable instruction surface; it checks
 the bundle before install, but does not install anything for you.
 
+**GitHub CLI (Codex and other supported agents):**
+
+Preview the immutable release before installing it. The v6.1.0 commands below
+become available after that release is published.
+
+Literal
+```shell
+gh skill preview snapsynapse/skill-provenance skill-provenance@v6.1.0
+gh skill install snapsynapse/skill-provenance skill-provenance@v6.1.0 --agent codex --scope user
+```
+
+The repository also contains `.codex-plugin/plugin.json` for Codex plugin
+packaging. Its presence does not imply that a public plugin listing exists.
+
 **Claude Code (Plugin):**
 ```shell
 /plugin marketplace add snapsynapse/skill-provenance
@@ -117,7 +131,7 @@ directory bundle can be placed there when you want a neutral install path.
 ```yaml
 steps:
   - uses: actions/checkout@v4
-  - uses: snapsynapse/skill-provenance@v6.0.0
+  - uses: snapsynapse/skill-provenance@v6.1.0
     with:
       bundle-path: skill-provenance
 ```
@@ -282,6 +296,8 @@ AGENTIC_SURFACES.md              <- Agent-facing surface inventory and trust bou
 skill-provenance.skill           <- Install this in Claude Settings -> Skills
 skill-provenance/                <- Canonical source bundle (metadata mode)
   SKILL.md                       <- The skill definition (what the agent reads)
+  agents/openai.yaml             <- Codex and ChatGPT display and trigger metadata
+  references/                    <- Detailed packaging, platform, and trust guidance
   README.md                      <- User guide: workflows, worked example, troubleshooting
   MANIFEST.yaml                  <- File inventory with roles, versions, hashes
   CHANGELOG.md                   <- Recent in-bundle history (last 5 entries)
@@ -294,7 +310,7 @@ AGENTS.md                        <- Guide for agents working on this repo
 CONTRIBUTING.md                  <- How to contribute
 ```
 
-The directory is the canonical cross-platform source bundle. The `.skill` file is a Claude-compatible ZIP wrapper around it. The `.claude-plugin/` directory and `skills/` make this repo double as a Claude Code plugin. Five focused skills (`open`, `validate`, `close`, `handoff`, `bootstrap`) extract specific workflows from the monolithic SKILL.md. If you keep a local `skills/skill-provenance` symlink for compatibility, it is ignored by git and is not part of the published repo.
+The directory is the canonical cross-platform source bundle. The `.skill` file is a Claude-compatible ZIP wrapper around it. The `.claude-plugin/` directory and `skills/` make this repo a Claude Code plugin, while `.codex-plugin/plugin.json` supplies Codex plugin package metadata. Five focused skills (`open`, `validate`, `close`, `handoff`, `bootstrap`) extract specific workflows from the canonical SKILL.md. If you keep a local `skills/skill-provenance` symlink for compatibility, it is ignored by git and is not part of the published repo.
 
 
 ## Evals

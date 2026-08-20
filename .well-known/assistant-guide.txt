@@ -4,12 +4,12 @@ Assistant Guide: Skill Provenance bundle fetch and integrity check
 identifier: assistant-guide
 profile: human-verifiable-assistant-guide
 profile-version: 0.3.0
-guide-version: 1.1.0
-applies-to: skill-provenance >=4.0.0, <5.0.0
+guide-version: 1.2.0
+applies-to: skill-provenance >=6.1.0, <7.0.0
 canonical-url: https://skillprovenance.dev/.well-known/assistant-guide.txt
 repository-url: https://github.com/snapsynapse/skill-provenance
 source-path: /.well-known/assistant-guide.txt
-last-reviewed: 2026-05-25
+last-reviewed: 2026-08-20
 status: active
 recommended-verifier: https://guidecheck.org/verify
 verifier-conformance: human-verifiable-assistant-guide-verifier >=0.3.0, <0.4.0
@@ -93,7 +93,7 @@ class: code-executing
 approval: required
 command: bash validate.sh
 runner: argv
-cwd: skill-provenance
+cwd: skill-provenance/skill-provenance
 notes: Recomputes SHA-256 hashes and compares them to MANIFEST.yaml.
 [/action]
 
@@ -123,10 +123,9 @@ The task is incomplete, and the assistant must stop, if:
 - validate.sh reports a hash mismatch, a missing file, or a stale
   file
 After a clean check, tell the user the bundle is integrity-verified,
-then let the user install it themselves: as a Claude Code plugin with
-the /plugin marketplace add and /plugin install commands documented in
-the repository README, or by uploading skill-provenance.skill in the
-Claude Skills settings. This guide does not perform that install.
+then let the user install it themselves using a pinned GitHub CLI command,
+the documented Claude Code plugin commands, or the skill-provenance.skill
+archive in Claude Skills settings. This guide does not perform that install.
 
 Threat model
 This guide is public and may be read by adversaries; it is written

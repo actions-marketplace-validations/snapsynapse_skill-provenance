@@ -15,6 +15,9 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - name: Verify repository search contract
+        run: node scripts/check-search.mjs
+
       - name: Verify bundle hashes
         uses: ./
         with:

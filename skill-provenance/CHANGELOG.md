@@ -7,6 +7,26 @@ travels with the package.
 Full release history lives in the source repository's top-level
 `CHANGELOG.md`.
 
+## 6.1.0 - 2026-08-20
+- SKILL.md: Front-loaded concrete Agent Skill bundle triggers, added the MIT
+  license field, and moved detailed packaging and platform guidance into
+  direct load-on-demand references. The always-loaded body is now below 500
+  lines without removing the operational protocol.
+- agents/openai.yaml: Added OpenAI display, trigger, brand, default-prompt, and
+  implicit-invocation metadata.
+- references/packaging-and-changelog.md: Added the detailed archive,
+  exact-inventory, and changelog rules moved out of SKILL.md.
+- references/platforms-and-trust.md: Added canonical and derived state,
+  ecosystem relationship, platform, and trust-boundary guidance moved out of
+  SKILL.md.
+- README.md: Added pinned GitHub CLI installation guidance and documented the
+  OpenAI metadata surfaces without claiming marketplace publication.
+- evals.json and evals-distribution.json: Unchanged because the versioning,
+  validation, packaging, and trust contracts remain semantically unchanged.
+- MANIFEST.yaml: Bumped the bundle to 6.1.0, advanced changed file versions,
+  added new files to inventory, and refreshed hashes.
+- CHANGELOG.md: Added this entry and retained the newest 5 releases.
+
 ## 6.0.0 - 2026-07-21
 - validate.sh: Added a constrained file-inventory grammar and fail-closed
   rejection for absolute or non-normalized paths, parent traversal,
@@ -87,16 +107,6 @@ Full release history lives in the source repository's top-level
 - MANIFEST.yaml: Bumped bundle to 4.13.0, updated bundle_date, advanced
   changed file versions, refreshed hashes, and updated origin/eval
   inventory notes.
-- CHANGELOG.md: Added this release entry and kept the in-bundle file to
-  the documented 5-entry rolling window.
-
-## 4.12.0 - 2026-06-10
-- evals-distribution.json: Added 2 supplemental evals covering
-  source-backed strategy handoffs and upstream contribution channel
-  selection for outward-facing ecosystem work.
-- MANIFEST.yaml: Bumped bundle to 4.12.0, updated bundle_date, advanced
-  evals-distribution.json and CHANGELOG.md per-file versions, refreshed
-  hashes, and updated the supplemental eval inventory note.
 - CHANGELOG.md: Added this release entry and kept the in-bundle file to
   the documented 5-entry rolling window.
 
