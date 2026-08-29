@@ -9,10 +9,12 @@ Canonical site: https://skillprovenance.dev/ | Repo: snapsynapse/skill-provenanc
 - `skill-provenance/SKILL.md` -- the skill definition (what agents read)
 - `skill-provenance/MANIFEST.yaml` -- file inventory with roles, versions, SHA-256 hashes
 - `skill-provenance/CHANGELOG.md` -- rolling recent history (last 5 entries)
-- `skill-provenance/evals.json` -- 39 core evaluation scenarios
-- `skill-provenance/evals-distribution.json` -- 17 supplemental distribution evals
+- `skill-provenance/evals.json` -- 41 core evaluation scenarios
+- `skill-provenance/evals-distribution.json` -- 18 supplemental distribution evals
 - `skill-provenance/validate.sh` -- local hash verification script
 - `skill-provenance/package.sh` -- derived copy generator (strict/ClawHub)
+- `skill-provenance/references/standalone-verification.md` -- no-plugin verify/bootstrap path
+- `verify.sh` -- standalone wrapper pinned to the canonical validator
 - `action.yml` -- GitHub Actions Marketplace wrapper for bundle validation
 - `CHANGELOG.md` -- full append-only repo history
 - `AGENTS.md` -- detailed guide for agents working on this repo
@@ -64,19 +66,23 @@ Test locally: `claude --plugin-dir .`
    rm -f skill-provenance.skill
    zip -r skill-provenance.skill skill-provenance/
    ```
-6. Run `./.github/scripts/release-surface-check.sh` to confirm eval-count declarations, GuideCheck sidecar metadata, and the `.skill` ZIP all match the current source.
+6. Run `./.github/scripts/release-surface-check.sh` to confirm eval-count declarations, the standalone validator pin, GuideCheck sidecar metadata, and the `.skill` ZIP all match the current source.
 
 ## CI
 
-`.github/workflows/validate.yml` runs on push/PR to `main`: verifies bundle hashes via the repo's own `action.yml`, test-builds the strict and ClawHub packages, runs `release-surface-check.sh`, `action-security-check.sh`, and `test-validate.sh`. All are bash scripts under `.github/scripts/` and `skill-provenance/`.
+`.github/workflows/validate.yml` runs on push/PR to `main`: verifies bundle hashes via the repo's own `action.yml`, test-builds the strict and ClawHub packages, and runs `release-surface-check.sh`, `action-security-check.sh`, `test-validate.sh`, and `test-standalone-verify.sh`. All are bash scripts under `.github/scripts/` and `skill-provenance/`.
 
-## Current state (as of 2026-08-20 assessment)
+## Current state (as of 2026-08-28 assessment)
 
-- Bundle source is being prepared for `6.1.0` discovery and search-contract improvements. It is
-  not committed, tagged, pushed, or published without explicit release
+- Stable public bundle release is `6.1.0`. A local `6.2.0` adoption release
+  adds standalone verification/bootstrap and refreshed evidence; it is not
+  committed, pushed, deployed, tagged, or published without separate
   authorization.
 - Validation fails closed on unsafe or ambiguous paths, duplicates, missing
   inventories, and symlink components. Packaging revalidates through the
   same policy at each derived-package boundary.
-- Roadmap priorities are the standalone verifier/bootstrap path, refreshed
-  ecosystem evidence, portfolio dogfooding, signatures, and registry interop.
+- GitHub Marketplace lists the validation action. GitHub Agent Skill
+  publication dry-run passes, while `gh skill search provenance` does not yet
+  return this repository.
+- Roadmap priorities are portfolio dogfooding, Agent Skill publication,
+  evidence-led interop, and later optional signatures.

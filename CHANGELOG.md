@@ -7,6 +7,41 @@ The in-bundle file at `skill-provenance/CHANGELOG.md` is the active changelog
 that travels with the skill bundle and keeps only the five most recent entries
 to limit package weight. Older history remains here in the repo root.
 
+## 6.2.0 - 2026-08-28
+- skill-provenance/SKILL.md, skill-provenance/README.md, and
+  skill-provenance/references/standalone-verification.md: Added no-plugin
+  verification, a portable bootstrap path, validator-pin trust boundaries,
+  exact bundle-versus-GuideCheck tag guidance, corrected stable-release
+  language, and dated adoption evidence.
+- verify.sh, .github/scripts/test-standalone-verify.sh,
+  .github/scripts/release-surface-check.sh, and
+  .github/workflows/validate.yml: Added a pinned canonical-validator wrapper,
+  local and downloaded tamper rejection, exit-code and cleanup coverage,
+  non-flaky archive inventory checks, release-surface enforcement, and CI
+  execution.
+- skill-provenance/evals.json and skill-provenance/evals-distribution.json:
+  Added two core scenarios covering canonical parser pinning and bootstrap
+  decision gates plus one supplemental scenario for release tag-family
+  separation, and migrated two older scenarios from retired handoffs to
+  durable evidence and roadmap sources. Coverage is now 41 core and 18
+  supplemental scenarios, 59 total.
+- docs/state-of-skill-versioning-2026.md, README.md, index.html, llms.txt,
+  sitemap.xml, AGENTIC_SURFACES.md, PROJECT_CONTEXT.md, ROADMAP.md, AGENTS.md,
+  and CLAUDE.md: Added the dated ecosystem observation and reproduction
+  boundary, exposed the standalone path and GitHub Pages agent surfaces,
+  corrected public-release truth and eval counts, documented source authority,
+  and migrated durable roadmap and session state.
+- search-audit.config.json and ops/search-indexing.md: Added the deployed
+  standalone verifier, release tag-family copy, and agent-surface links to
+  deterministic repository and production search contracts while preserving
+  the historical console baseline.
+- .codex-plugin/plugin.json: Advanced package metadata to 6.2.0 and disclosed
+  standalone verification and bootstrap capability.
+- skill-provenance/MANIFEST.yaml, skill-provenance/CHANGELOG.md, and
+  skill-provenance.skill: Prepared bundle 6.2.0, advanced file revisions,
+  refreshed hashes and rolling history, recorded validation, and rebuilt the
+  derived archive.
+
 ## 6.1.0 - 2026-08-20
 - skill-provenance/SKILL.md, skill-provenance/agents/openai.yaml,
   skill-provenance/references/packaging-and-changelog.md, and

@@ -7,6 +7,25 @@ travels with the package.
 Full release history lives in the source repository's top-level
 `CHANGELOG.md`.
 
+## 6.2.0 - 2026-08-28
+- SKILL.md: Added direct routing for no-plugin verification and portable
+  bootstrap work while keeping the canonical workflow concise.
+- README.md: Added the pinned standalone verifier, bootstrap path, corrected
+  stable-release language, exact bundle-versus-GuideCheck tag guidance, and a
+  dated adoption-evidence observation with its measurement boundary.
+- references/standalone-verification.md: Added inspect-before-run verification
+  instructions, validator-pin trust boundaries, exit semantics, and a
+  model-agnostic bootstrap prompt that preserves initialization decisions.
+- evals.json and evals-distribution.json: Added two core scenarios for
+  canonical-parser pinning and safe standalone bootstrap behavior plus one
+  supplemental scenario for release tag-family separation, and migrated two
+  older scenarios from retired handoffs to durable evidence and roadmap
+  sources. Coverage is now 41 core, 18 supplemental, and 59 total.
+- MANIFEST.yaml: Bumped the bundle to 6.2.0, advanced changed file revisions,
+  inventoried the new reference, refreshed hashes, and recorded release
+  validation.
+- CHANGELOG.md: Added this entry and retained the newest 5 releases.
+
 ## 6.1.0 - 2026-08-20
 - SKILL.md: Front-loaded concrete Agent Skill bundle triggers, added the MIT
   license field, and moved detailed packaging and platform guidance into
@@ -93,21 +112,5 @@ Full release history lives in the source repository's top-level
 - MANIFEST.yaml: Bumped the bundle to 5.0.0, updated file versions and
   inventory notes, and refreshed hashes.
 - CHANGELOG.md: Added this entry and retained the newest 5 releases.
-
-## 4.13.0 - 2026-06-23
-- SKILL.md: Added optional `origin` metadata guidance for derived,
-  installed, registry, settings, or platform-export copies whose selected
-  source path needs to survive a packaging boundary.
-- README.md: Documented the `origin` block, recommended fields, and the
-  boundary between origin receipts, deployment metadata, package-manager
-  lockfiles, and trust anchors.
-- evals-distribution.json: Added a supplemental eval covering duplicate
-  source-path disambiguation for derived copies. Supplemental eval count
-  is now 16; total eval count is now 46.
-- MANIFEST.yaml: Bumped bundle to 4.13.0, updated bundle_date, advanced
-  changed file versions, refreshed hashes, and updated origin/eval
-  inventory notes.
-- CHANGELOG.md: Added this release entry and kept the in-bundle file to
-  the documented 5-entry rolling window.
 
 Older entries archived in the source repository's top-level CHANGELOG.md.

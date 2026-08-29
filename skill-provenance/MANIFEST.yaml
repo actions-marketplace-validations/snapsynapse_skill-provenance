@@ -1,6 +1,6 @@
 bundle: skill-provenance
-bundle_version: 6.1.0
-bundle_date: 2026-08-20
+bundle_version: 6.2.0
+bundle_date: 2026-08-28
 description: >
   Metaskill for portable provenance, integrity, and drift control across
   Agent Skills local folders, registries, platform uploads, and multi-agent
@@ -105,19 +105,30 @@ validated_against:
       Canonical hashes, focused skill metadata, OpenAI metadata, Codex plugin
       package, repository search contract, derived archive, regression suite,
       and GitHub publication dry-run passed. Attestation remains informational.
+  - bundle_version: 6.2.0
+    harness: OpenAI Codex desktop
+    model: GPT-5
+    date: 2026-08-28
+    result: pass
+    method: validate.sh verify + regression suite + standalone pin test + derived package validation + search contract + gh skill publish dry-run + release-surface-check.sh
+    notes: >
+      Canonical hashes, local and downloaded standalone verifier pinning,
+      tamper rejection, exit-code preservation, temporary cleanup, derived
+      strict and ClawHub packages, repository search contract, archive
+      agreement, and release surfaces passed. Attestation remains informational.
 
 files:
   - path: SKILL.md
     role: skill
-    version: 24
-    hash: sha256:d045e231cddc2e8a9021d5b9e4e30bdfe45278efd7a52cca8977d6e5542c4284
-    note: Canonical skill definition with action-led triggers, concise progressive disclosure, constrained manifest grammar, exact package inventory, evidence-based staleness, package validation gates, origin metadata, and provenance metadata in frontmatter
+    version: 25
+    hash: sha256:75cf176b93f3bc3fbb3f7b7e8d440bd2f2f604fdd6874a1c3a39ef8de7970eee
+    note: Canonical skill definition with action-led triggers, concise progressive disclosure, constrained manifest grammar, standalone verification and bootstrap routing, exact package inventory, evidence-based staleness, package validation gates, origin metadata, and provenance metadata in frontmatter
 
   - path: README.md
     role: reference
-    version: 27
-    hash: sha256:a5ee22090d8da2e471565514d0233e197d60aacf166f241d38db66c43969d8dc
-    note: Human-facing instructions for GitHub CLI installation, OpenAI discovery metadata, constrained manifest paths, exact package inventory, fail-closed validation, packaging, trust, and troubleshooting
+    version: 28
+    hash: sha256:322865d66ff4f137939c42bf0cbdb44519ae4756ecf960cc27ec4a895b3b35b0
+    note: Human-facing instructions for GitHub CLI installation, exact bundle-versus-GuideCheck release tags, no-plugin verification and bootstrap, dated adoption evidence, OpenAI discovery metadata, constrained manifest paths, exact package inventory, fail-closed validation, packaging, trust, and troubleshooting
 
   - path: agents/openai.yaml
     role: agents
@@ -137,22 +148,28 @@ files:
     hash: sha256:dbd6a0e4b7035d0c9deb37e0a76b3385347b82a6d6b4d9bd4c2bee03956eac51
     note: Load-on-demand canonical and derived states, platform notes, ecosystem boundaries, and trust guidance
 
+  - path: references/standalone-verification.md
+    role: reference
+    version: 1
+    hash: sha256:30ac69654d5712b9930ceb1172d6bd2216f3a5a4930ab2c3151a14fb6a1b0a6c
+    note: No-plugin verification procedure, pinned-validator trust boundary, exit semantics, and portable bootstrap prompt
+
   - path: evals.json
     role: evals
-    version: 15
-    hash: sha256:fcd3c550dc39b791993acbe990fd6ea0b272d92ea4415c1bf8be14f1d775f0cc
-    note: 39 core evals including files-section scope, malformed attestation, exact package inventory, unsafe paths, duplicates, symlinks, fail-closed hashes, and prior provenance, portability, deployment, validation, and trust workflows
+    version: 16
+    hash: sha256:18f64e10b8785ae59b775b2bedc100518396bc28d7567d6116ba2e3dd9626b9e
+    note: 41 core evals including standalone verifier pinning and bootstrap decision gates, files-section scope, malformed attestation, exact package inventory, unsafe paths, duplicates, symlinks, fail-closed hashes, and prior provenance, portability, deployment, validation, and trust workflows
 
   - path: evals-distribution.json
     role: evals
-    version: 9
-    hash: sha256:b53948f070b012533ad851e508e0d8640a2e79d00286d78368bee90ea783e624
-    note: 17 supplemental evals after consolidating dirty-source package gating, covering package-boundary safety, GitHub Action shell safety, derived packaging, origin metadata, release integrity, surface disclosure, and source-backed ecosystem workflows
+    version: 10
+    hash: sha256:901e8a4a1d52a50c9aaf757ce248935b4e2788366fcfd9ac2fdb92c00754cdf0
+    note: 18 supplemental evals covering release tag-family separation, package-boundary safety, GitHub Action shell safety, derived packaging, origin metadata, release integrity, surface disclosure, and source-backed ecosystem workflows
 
   - path: CHANGELOG.md
     role: reference
-    version: 30
-    hash: sha256:ab2aede7090863a9477a733df295a070b5036f33d5768ac0865e6da49ae71568
+    version: 31
+    hash: sha256:cd07271b14cc63d654b88dc1d9083065adfee7f246ce13b9f82543e14d9c5d12
     note: Active in-bundle changelog with the 5 most recent entries; older history lives in the repo root
 
   - path: validate.sh

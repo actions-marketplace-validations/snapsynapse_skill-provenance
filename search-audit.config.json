@@ -27,7 +27,10 @@
         "text/html"
       ],
       "contains": [
-        "gh skill install snapsynapse/skill-provenance skill-provenance@v6.1.0 --agent codex --scope user"
+        "gh skill install snapsynapse/skill-provenance skill-provenance@v6.1.0 --agent codex --scope user",
+        "Bundle releases use vX.Y.Z tags; GuideCheck releases use guidecheck-X.Y.Z tags.",
+        "href=\"/llms.txt\"",
+        "href=\"/verify.sh\""
       ]
     },
     {
@@ -54,7 +57,21 @@
       ],
       "contains": [
         "Skill Provenance",
-        "https://github.com/snapsynapse/skill-provenance"
+        "https://github.com/snapsynapse/skill-provenance",
+        "Release tag families",
+        "https://github.com/snapsynapse/skill-provenance/releases/tag/v6.1.0"
+      ]
+    },
+    {
+      "path": "verify.sh",
+      "contentTypes": [
+        "text/plain",
+        "text/x-shellscript",
+        "application/x-sh"
+      ],
+      "contains": [
+        "VALIDATOR_SHA256=\"cac9624665345d317fd37edf183defd5553f8a2afaed736c07f58f597ae55c05\"",
+        "https://raw.githubusercontent.com/snapsynapse/skill-provenance/main/skill-provenance/validate.sh"
       ]
     },
     {

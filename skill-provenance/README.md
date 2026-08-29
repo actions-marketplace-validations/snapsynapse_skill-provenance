@@ -1,11 +1,13 @@
 ---
 skill_bundle: skill-provenance
 file_role: reference
-version: 27
-version_date: 2026-08-20
-previous_version: 26
+version: 28
+version_date: 2026-08-28
+previous_version: 27
 change_summary: >
-  Added pinned GitHub CLI installation and OpenAI discovery metadata guidance.
+  Added the pinned standalone verifier and portable bootstrap prompt,
+  separated bundle and GuideCheck release tags, corrected post-6.1.0
+  release guidance, and linked the drift evidence.
 ---
 
 # Skill Provenance - README
@@ -101,7 +103,7 @@ install the skill and does not prove the bundle is safe to run.
 | **Claude Chat** (project) | Add `SKILL.md` to the project knowledge. It will be available in every conversation within that project. |
 | **Claude Cowork** | Place the `skill-provenance/` folder in your Cowork skill directory. Claude will discover it automatically. |
 | **Claude Code** | Place the `skill-provenance/` folder in your project's skill directory (typically alongside other skills). Reference it in your CLAUDE.md if needed. |
-| **Codex** | After v6.1.0 is released, preview with `gh skill preview snapsynapse/skill-provenance skill-provenance@v6.1.0`, then install with `gh skill install snapsynapse/skill-provenance skill-provenance@v6.1.0 --agent codex --scope user`. For a local derived copy, use `./package.sh strict`. |
+| **Codex** | Preview the current stable release with `gh skill preview snapsynapse/skill-provenance skill-provenance@v6.1.0`, then install with `gh skill install snapsynapse/skill-provenance skill-provenance@v6.1.0 --agent codex --scope user`. For a local derived copy, use `./package.sh strict`. |
 | **Gemini CLI** | Copy or symlink a strict-platform copy to `~/.gemini/skills/skill-provenance/` for user-wide availability, or `.gemini/skills/skill-provenance/` for a single project. `./package.sh strict` prepares the minimal-frontmatter variant. |
 | **Perplexity Computer** | Upload a `.zip` or folder copy when supported. For strict loaders, start from `./package.sh strict`, then rename `.skill` to `.zip` if needed and keep the trigger-rich description. |
 | **Generic agentskills clients** | Use the directory bundle directly. Some cross-client tooling also recognizes `.agents/skills/skill-provenance/` as a neutral install location. |
@@ -109,6 +111,36 @@ install the skill and does not prove the bundle is safe to run.
 The canonical bundle includes `agents/openai.yaml` for OpenAI interface and
 trigger metadata. The source repository also includes a root Codex plugin
 manifest. Neither file is evidence of a public marketplace listing.
+
+The source repository publishes two release tag families. Bundle releases use
+`vX.Y.Z`; GuideCheck assistant-guide releases use `guidecheck-X.Y.Z`. Use an
+exact bundle tag for Agent Skill installs, the validation action, and the
+`.skill` archive. A provider's generic latest label can select the other tag
+family.
+
+### No plugin: standalone verification and bootstrap
+
+If the plugin is not installed, use the repository's standalone wrapper. It
+checks the canonical validator against a pinned SHA-256 before running it, so
+the digest rather than a mutable version label controls execution.
+
+Literal
+```shell
+curl -fsSLo /tmp/skill-provenance-verify.sh https://skillprovenance.dev/verify.sh
+sed -n '1,220p' /tmp/skill-provenance-verify.sh
+```
+
+Replace: TARGET_SKILL_DIRECTORY -> the local directory containing `SKILL.md` and `MANIFEST.yaml`
+
+Customize
+```shell
+bash /tmp/skill-provenance-verify.sh TARGET_SKILL_DIRECTORY
+```
+
+For an unversioned bundle, use the portable bootstrap prompt in
+[`references/standalone-verification.md`](references/standalone-verification.md).
+It inventories the bundle and preserves the same decision and authority gates
+without requiring a prior plugin installation.
 
 Treat the bundle as moving through three states:
 
@@ -882,6 +914,13 @@ maintained multi-file bundle.
 Source pinning and registry versioning reduce risk. They do not replace
 bundle-local staleness detection, changelogs, hashes, or cross-surface
 drift checks.
+
+A public registry-diff observation dated 2026-08-27 reported 1,193 Agent
+Skill instruction-text changes, including 169 changes with no version
+movement, or 14.2 percent. Treat that as a dated third-party observation,
+not a live metric. It supports making per-resource digests load-bearing
+while retaining semver for release communication. See the source
+[issue comment](https://github.com/agentskills/agentskills/issues/46#issuecomment-5441281208).
 
 Optional `origin` metadata can bridge the boundary between these systems
 by preserving the selected source path and ignored duplicate paths inside

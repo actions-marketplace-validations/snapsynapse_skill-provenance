@@ -11,11 +11,13 @@ skill-provenance/                ← Canonical source bundle (DO NOT rename)
 ├── README.md                    ← Human-facing user guide (has internal version header)
 ├── MANIFEST.yaml                ← File inventory: roles, versions, SHA-256 hashes
 ├── CHANGELOG.md                 ← Recent in-bundle change history (last 5 entries)
-├── evals.json                   ← 39 core evaluation scenarios
-├── evals-distribution.json      ← 17 supplemental distribution evals
+├── evals.json                   ← 41 core evaluation scenarios
+├── evals-distribution.json      ← 18 supplemental distribution evals
 ├── validate.sh                  ← Bash script for local hash verification
-└── package.sh                   ← Bash script for derived strict/ClawHub outputs
+├── package.sh                   ← Bash script for derived strict/ClawHub outputs
+└── references/standalone-verification.md ← No-plugin verify/bootstrap path
 action.yml                       ← GitHub Actions Marketplace wrapper for validate.sh
+verify.sh                        ← Standalone wrapper pinned to canonical validate.sh
 CHANGELOG.md                     ← Full append-only repo history
 skill-provenance.skill           ← Claude Settings ZIP (rebuilt from the directory)
 ```
@@ -50,8 +52,8 @@ The `skill-provenance/` directory is the single source of truth. The `.skill` fi
    zip -r skill-provenance.skill skill-provenance/
    ```
 7. Run `./.github/scripts/release-surface-check.sh` to confirm eval-count
-   declarations, GuideCheck sidecar metadata, and the `.skill` ZIP all
-   match the current source.
+   declarations, the standalone validator pin, GuideCheck sidecar metadata,
+   and the `.skill` ZIP all match the current source.
 
 
 ## Key rules
@@ -70,6 +72,7 @@ The `skill-provenance/` directory is the single source of truth. The `.skill` fi
 These repo-level files are not tracked in MANIFEST.yaml:
 
 - `README.md` (root) — GitHub landing page, not part of the skill bundle.
+- `verify.sh` — Standalone wrapper that delegates to the pinned canonical validator.
 - `CHANGELOG.md` (root) — Full repo history, not part of the skill bundle.
 - `AGENTS.md` — This file.
 - `CONTRIBUTING.md` — Contribution guide.

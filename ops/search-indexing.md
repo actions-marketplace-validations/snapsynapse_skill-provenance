@@ -3,7 +3,7 @@
 title: "Search indexing"
 purpose: "Property-specific index policy, validation commands, deployment gate, and console follow-up."
 status: active
-updated: 2026-08-20
+updated: 2026-08-28
 owner: "Sam"
 open_tasks: []
 ---
@@ -28,11 +28,16 @@ The repository root is both source and deployable static artifact. If that deplo
 |---|---|---|
 | `/` | Index and include in sitemap | Canonical product and installation page |
 | `/404.html` and unknown routes | `noindex` and omit from sitemap | Error handling, not a content destination |
-| `/robots.txt`, `/sitemap.xml`, `/llms.txt` | Crawlable and omitted from the page sitemap | Search and agent discovery surfaces |
+| `/robots.txt`, `/sitemap.xml`, `/llms.txt`, `/verify.sh` | Crawlable and omitted from the page sitemap | Search, agent discovery, and pinned standalone verification surfaces |
 | `/.well-known/assistant-guide.txt` and sidecar | Crawlable and omitted from the page sitemap | Bounded agent verification surfaces |
 | GitHub, ClawHub, and other external copies | Omit from this sitemap | Distribution copies are not site canonical pages |
 
 The site has one English canonical HTML page. Multilingual indexing, locale canonicals, and `hreflang` are not applicable unless additional localized pages are deliberately published.
+
+The homepage links the deployed `llms.txt`, standalone verifier, assistant
+guide, and repository-hosted agentic-surface disclosure. Bundle and GuideCheck
+release tags remain separate; public installation copy uses exact bundle tags
+rather than a provider's generic latest label.
 
 ## Evidence governance
 

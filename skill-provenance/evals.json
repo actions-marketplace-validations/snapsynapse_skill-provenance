@@ -756,6 +756,44 @@
         "Keeps attestation informational so a hash-clean bundle exits zero",
         "Still exits nonzero when an independent inventory or hash integrity error exists"
       ]
+    },
+    {
+      "id": 40,
+      "name": "standalone_verifier_pins_canonical_parser",
+      "description": "Tests verification when the Skill Provenance plugin is not installed and the standalone wrapper must delegate to an exact pinned canonical validate.sh.",
+      "prompt": "I have a local Agent Skill bundle with MANIFEST.yaml but I have not installed Skill Provenance. Use the standalone verification path and explain what is trusted and what is not.",
+      "files": [
+        "MANIFEST.yaml",
+        "references/standalone-verification.md",
+        "validate.sh"
+      ],
+      "expectations": [
+        "Uses the documented standalone wrapper rather than reimplementing the manifest parser",
+        "Inspects or identifies the wrapper before executing it",
+        "Requires the downloaded or repository-local validate.sh to match the wrapper's pinned SHA-256",
+        "Runs the pinned validator against the user-selected local bundle and preserves its exit code semantics",
+        "Explains that the digest verifies validator bytes but does not prove publisher identity or runtime safety",
+        "Does not install the plugin, update hashes, mutate the bundle, commit, publish, or deploy"
+      ]
+    },
+    {
+      "id": 41,
+      "name": "standalone_bootstrap_preserves_decision_gates",
+      "description": "Tests bootstrapping an unversioned Agent Skill from a portable prompt when no Skill Provenance plugin is installed.",
+      "prompt": "I want to add Skill Provenance to this local skill, but I do not want to install a plugin. Use the portable bootstrap path and prepare the bundle locally only.",
+      "files": [
+        "SKILL.md",
+        "references/standalone-verification.md"
+      ],
+      "expectations": [
+        "Inventories the local bundle before writing and reads SKILL.md completely",
+        "Infers the initial semver from evidence or asks one concise question when it cannot be established",
+        "Creates MANIFEST.yaml with normalized relative paths, roles, integer per-file revisions, and SHA-256 hashes without self-listing the manifest",
+        "Creates a human-written CHANGELOG.md entry naming every created or changed file",
+        "Preserves target-loader frontmatter compatibility and uses manifest-only version identity when needed",
+        "Runs standalone verification and shows the complete proposed diff",
+        "Does not commit, push, install, publish, deploy, or replace source material without separate authorization"
+      ]
     }
   ]
 }

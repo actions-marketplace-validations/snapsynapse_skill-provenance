@@ -12,12 +12,12 @@ license: MIT
 metadata:
   skill_bundle: skill-provenance
   file_role: skill
-  version: 24
-  version_date: 2026-08-20
-  previous_version: 23
+  version: 25
+  version_date: 2026-08-28
+  previous_version: 24
   change_summary: >
-    Front-loaded concrete triggers and moved packaging and platform detail
-    into load-on-demand references for better agent discovery.
+    Added standalone verification and bootstrap routing for users who have
+    not installed the plugin while keeping validate.sh as the sole parser.
   author: PAICE.work PBC (paice.work)
   source: https://github.com/snapsynapse/skill-provenance
 ---
@@ -342,6 +342,9 @@ check without doing the full open-session review or close-session update:
 1. Read `MANIFEST.yaml` and verify all listed files are present.
 2. Run `validate.sh` when available, or compute SHA-256 hashes for listed
    files and compare them against the manifest.
+   When the plugin and local helper are both absent, read
+   [references/standalone-verification.md](references/standalone-verification.md)
+   and use its pinned standalone wrapper rather than recreating the parser.
 3. Report checked files, missing files, hash mismatches, skipped files,
    and pass/fail status.
    Treat only `hash: null` as an intentional skip; missing, malformed, or
@@ -495,6 +498,9 @@ For an unversioned bundle, inventory files yourself, establish an initial
 version from available history or user direction, add safe internal headers,
 create `MANIFEST.yaml` with hashes, create the first changelog entry, validate,
 and deliver the complete bundle. This is a one-time operation per bundle.
+When the skill is not installed, use the portable prompt in
+[references/standalone-verification.md](references/standalone-verification.md)
+and keep the same manifest, changelog, validation, and authority boundaries.
 
 
 ## Origin

@@ -1,11 +1,7 @@
 [![Validate bundle](https://github.com/snapsynapse/skill-provenance/actions/workflows/validate.yml/badge.svg)](https://github.com/snapsynapse/skill-provenance/actions/workflows/validate.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://github.com/snapsynapse/skill-provenance/blob/main/LICENSE)
-[![Latest release](https://img.shields.io/github/v/release/snapsynapse/skill-provenance)](https://github.com/snapsynapse/skill-provenance/releases/latest)
-[![ClawHub](https://img.shields.io/badge/ClawHub-skill--provenance-blue)](https://clawhub.ai/snapsynapse/skills/skill-provenance)
-[![ProSkills.md](https://img.shields.io/badge/ProSkills.md-8.41%2F10-brightgreen)](https://proskills.md)
-[![ClawHub installs](https://img.shields.io/badge/ClawHub-1k%2B%20downloads-blue)](https://clawhub.ai/snapsynapse/skills/skill-provenance)
-[![Awesome OpenClaw Skills](https://img.shields.io/badge/Awesome%20OpenClaw-Skills-blueviolet)](https://github.com/VoltAgent/awesome-openclaw-skills)
-[![ClawHub security audit](https://img.shields.io/badge/ClawHub-security%20audit-blue)](https://clawhub.ai/snapsynapse/skills/skill-provenance/security-audit)
+[![Stable bundle](https://img.shields.io/github/v/tag/snapsynapse/skill-provenance?filter=v%2A&label=bundle)](https://github.com/snapsynapse/skill-provenance/releases/tag/v6.1.0)
+[![GitHub Marketplace](https://img.shields.io/badge/GitHub%20Marketplace-Skill%20Provenance%20Validate-blue)](https://github.com/marketplace/actions/skill-provenance-validate)
 
 # Skill Provenance
 
@@ -19,6 +15,12 @@ Teams that build, distribute, or run Agent Skills across multiple surfaces and n
 ## What problem it solves
 
 Agent Skills move across local folders, registries, and platform uploads with no portable way to verify version, integrity, or drift. Skill Provenance makes a bundle's identity and integrity travel with it.
+
+A public registry-diff observation dated 2026-08-27 reported that 169 of
+1,193 Agent Skill instruction-text changes, or 14.2 percent, had no version
+movement. This is a dated third-party observation, not a live metric. It is
+evidence for making the digest load-bearing while keeping semver as a useful
+release label. See the [evidence note](docs/state-of-skill-versioning-2026.md).
 
 ## Canonical URL
 
@@ -80,8 +82,7 @@ the bundle before install, but does not install anything for you.
 
 **GitHub CLI (Codex and other supported agents):**
 
-Preview the immutable release before installing it. The v6.1.0 commands below
-become available after that release is published.
+Preview the current stable v6.1.0 release before installing it.
 
 Literal
 ```shell
@@ -89,8 +90,35 @@ gh skill preview snapsynapse/skill-provenance skill-provenance@v6.1.0
 gh skill install snapsynapse/skill-provenance skill-provenance@v6.1.0 --agent codex --scope user
 ```
 
+This repository publishes two release tag families. Bundle releases use
+`vX.Y.Z`; GuideCheck assistant-guide releases use `guidecheck-X.Y.Z`. Use an
+exact bundle tag for Agent Skill installs, the validation action, and the
+`.skill` archive. A provider's generic latest label can select the other tag
+family.
+
 The repository also contains `.codex-plugin/plugin.json` for Codex plugin
 packaging. Its presence does not imply that a public plugin listing exists.
+
+**No plugin required:**
+
+Download and inspect the standalone wrapper. It verifies the canonical
+validator against a pinned SHA-256 before running it.
+
+Literal
+```shell
+curl -fsSLo /tmp/skill-provenance-verify.sh https://skillprovenance.dev/verify.sh
+sed -n '1,220p' /tmp/skill-provenance-verify.sh
+```
+
+Replace: TARGET_SKILL_DIRECTORY -> the local directory containing `SKILL.md` and `MANIFEST.yaml`
+
+Customize
+```shell
+bash /tmp/skill-provenance-verify.sh TARGET_SKILL_DIRECTORY
+```
+
+For an unversioned bundle, use the portable prompt in
+[`skill-provenance/references/standalone-verification.md`](skill-provenance/references/standalone-verification.md).
 
 **Claude Code (Plugin):**
 ```shell
@@ -106,7 +134,7 @@ After install, five commands are available:
 - `/skill-provenance:bootstrap` — add version tracking to an unversioned bundle
 
 **Claude (Settings UI):**
-Download `skill-provenance.skill` from the [latest release](https://github.com/snapsynapse/skill-provenance/releases) and install:
+Download `skill-provenance.skill` from the [stable v6.1.0 bundle release](https://github.com/snapsynapse/skill-provenance/releases/tag/v6.1.0) and install:
 `claude.ai` -> Profile icon -> `Settings` -> `Skills` -> `Add Skill` -> select the file.
 
 If your loader only accepts `.zip` or `.md` uploads, rename
@@ -127,7 +155,7 @@ directory bundle can be placed there when you want a neutral install path.
 **ClawHub:**
 `openclaw skills install @snapsynapse/skill-provenance`
 
-**GitHub Actions Marketplace:**
+**[GitHub Actions Marketplace](https://github.com/marketplace/actions/skill-provenance-validate):**
 ```yaml
 steps:
   - uses: actions/checkout@v4
@@ -230,14 +258,15 @@ before you install.
 
 **Checking release surfaces before publishing:**
 
+Literal
 ```bash
 ./.github/scripts/release-surface-check.sh
 ```
 
-This repo-level check confirms declared eval counts, the GuideCheck
-sidecar hash and byte metadata, and `skill-provenance.skill` contents all
-match the current source tree. It is a release-confidence check, not a
-trust anchor.
+This repo-level check confirms declared eval counts, the standalone validator
+pin, release tag-family separation, the GuideCheck sidecar hash and byte
+metadata, and `skill-provenance.skill` contents all match the current source
+tree. It is a release-confidence check, not a trust anchor.
 
 **What the manifest tells you:**
 - Which files belong to the bundle (and which are missing)
@@ -285,6 +314,9 @@ action.yml                       <- GitHub Actions Marketplace wrapper
 .github/scripts/release-surface-check.sh <- Release-surface drift check
 .github/scripts/action-security-check.sh <- Composite-action input safety regression
 .github/scripts/test-validate.sh <- Validator hash-state regression suite
+.github/scripts/test-standalone-verify.sh <- Standalone verifier pinning regression
+verify.sh                        <- Zero-install wrapper pinned to canonical validate.sh
+docs/state-of-skill-versioning-2026.md <- Dated ecosystem evidence note
 skills/open/SKILL.md             <- /skill-provenance:open (verify bundle on session start)
 skills/validate/SKILL.md         <- /skill-provenance:validate (hash/inventory check only)
 skills/close/SKILL.md            <- /skill-provenance:close (update versions on session end)
@@ -297,12 +329,12 @@ skill-provenance.skill           <- Install this in Claude Settings -> Skills
 skill-provenance/                <- Canonical source bundle (metadata mode)
   SKILL.md                       <- The skill definition (what the agent reads)
   agents/openai.yaml             <- Codex and ChatGPT display and trigger metadata
-  references/                    <- Detailed packaging, platform, and trust guidance
+  references/                    <- Packaging, platform, trust, and standalone guidance
   README.md                      <- User guide: workflows, worked example, troubleshooting
   MANIFEST.yaml                  <- File inventory with roles, versions, hashes
   CHANGELOG.md                   <- Recent in-bundle history (last 5 entries)
-  evals.json                     <- 39 core evaluation scenarios
-  evals-distribution.json        <- 17 supplemental packaging/deployment/integrity evals
+  evals.json                     <- 41 core evaluation scenarios
+  evals-distribution.json        <- 18 supplemental packaging/deployment/integrity evals
   validate.sh                    <- Local hash verification script
   package.sh                     <- Zero-dependency helper for derived copies
 CHANGELOG.md                     <- Full append-only repo history
@@ -315,8 +347,8 @@ The directory is the canonical cross-platform source bundle. The `.skill` file i
 
 ## Evals
 
-56 evaluation scenarios across two files: 39 core workflow evals in
-[evals.json](skill-provenance/evals.json) and 17 supplemental
+59 evaluation scenarios across two files: 41 core workflow evals in
+[evals.json](skill-provenance/evals.json) and 18 supplemental
 distribution/package/integrity evals in
 [evals-distribution.json](skill-provenance/evals-distribution.json).
 

@@ -250,11 +250,11 @@
     },
     {
       "id": 114,
-      "name": "source_backed_strategy_handoff",
-      "description": "Tests that strategy handoffs with external competitive claims preserve enough source evidence for later agents to safely publish or implement from them.",
-      "prompt": "Review this adoption strategy handoff before we use it to rewrite public positioning. It says several competitor facts were verified by a prior research run, but only the conclusions are written down.",
+      "name": "source_backed_strategy_evidence",
+      "description": "Tests that dated ecosystem evidence preserves enough source and measurement context for later agents to safely reuse it in public positioning.",
+      "prompt": "Review this dated skill-versioning evidence note before we reuse its registry-drift figures in public positioning. Confirm what is directly sourced, what cannot be reproduced from the rolling endpoint, and what must be refreshed.",
       "files": [
-        "../handoffs/2026-06-09-adoption-strategy-handoff.md",
+        "../docs/state-of-skill-versioning-2026.md",
         "../README.md",
         "../index.html",
         "../llms.txt",
@@ -272,9 +272,10 @@
       "id": 115,
       "name": "upstream_contribution_channel_selection",
       "description": "Tests that outward-facing upstream spec work follows the target project's current contribution process instead of assuming issue, PR, or discussion workflow.",
-      "prompt": "Prepare the next step for proposing optional version and integrity metadata to an upstream Agent Skills spec repo. The handoff says to file an issue, but we have not checked the upstream contribution guide yet.",
+      "prompt": "Prepare the next evidence-led upstream step on optional version and integrity metadata. Prior discussion happened in an issue, but we have not checked whether the project's current contribution guide now prefers an issue, discussion, or pull request.",
       "files": [
-        "../handoffs/2026-06-09-adoption-strategy-handoff.md",
+        "../ROADMAP.md",
+        "../docs/state-of-skill-versioning-2026.md",
         "../README.md",
         "README.md",
         "SKILL.md"
@@ -342,6 +343,26 @@
         "Confirms all mode revalidates the canonical source at each derived-package boundary",
         "Keeps validate.sh as the single parser and policy authority instead of duplicating a second manifest grammar in package.sh",
         "Still builds both variants from a clean canonical manifest"
+      ]
+    },
+    {
+      "id": 119,
+      "name": "release_tag_family_disambiguation",
+      "description": "Tests release guidance when one repository publishes bundle releases and separately versioned GuideCheck assistant-guide releases.",
+      "prompt": "This repository has v6.1.0 and guidecheck-1.2.0 tags, and a provider labels guidecheck-1.2.0 as Latest. Give me the safe install and release references for the Agent Skill, validation action, .skill archive, and assistant guide.",
+      "files": [
+        "../README.md",
+        "../.well-known/assistant-guide-manifest.txt",
+        "MANIFEST.yaml",
+        "README.md"
+      ],
+      "expectations": [
+        "Uses an exact vX.Y.Z bundle tag for the Agent Skill, GitHub Action, and .skill archive",
+        "Uses guidecheck-X.Y.Z only for the assistant-guide artifact and its immutable-release metadata",
+        "Does not use a generic @latest reference or /releases/latest URL for bundle installation",
+        "Distinguishes the current stable public bundle from an uncommitted, untagged, or unpublished local candidate",
+        "Treats provider Latest labels as ambiguous when multiple release tag families share one repository",
+        "Does not retag, publish, deploy, or alter provider state without separate authorization"
       ]
     }
   ]

@@ -45,20 +45,51 @@ description (see the `SKILL_v4.md` → `SKILL.md`/`MANIFEST.yaml` snippet in
 - Assistant guide (pre-install verification): https://skillprovenance.dev/.well-known/assistant-guide.txt
 - Releases: https://github.com/snapsynapse/skill-provenance/releases
 
-## Current status (as of 2026-08-20 assessment)
+## Current status (as of 2026-08-28 assessment)
 
-- Bundle source is being prepared for 6.1.0 discovery and search-contract improvements. It is not
-  committed, tagged, pushed, or published until the release workflow is
-  explicitly authorized.
+- Stable public bundle release is 6.1.0. A local 6.2.0 adoption release adds
+  a standalone verifier, portable bootstrap prompt, and refreshed ecosystem
+  evidence. It is not committed, pushed, deployed, tagged, or published until
+  each release step is explicitly authorized.
 - The validator now fails closed on unsafe or ambiguous paths, duplicate
   entries, manifest-listed symlinks, and unsupported inventory syntax.
   Packaging reuses that validator policy at each derived-package boundary.
-- Coverage is 39 core and 17 supplemental evals, 56 total, plus executable
+- Coverage is 41 core and 18 supplemental evals, 59 total, plus executable
   validator, action-input, packaging, and release-surface regression checks.
-- Canonical OpenAI metadata, Codex plugin package metadata, GitHub Agent Skill
-  compatibility, and deterministic repository/production search checks are
-  part of the local 6.1.0 draft.
-- Current adoption work remains the standalone verifier/bootstrap path,
-  refreshed ecosystem evidence, dogfooding, badges, and targeted interop.
+- The GitHub Marketplace validation action is publicly listed and the stable
+  action reference is `snapsynapse/skill-provenance@v6.1.0`.
+- GitHub Agent Skill publication dry-run passes, but discovery search does not
+  yet return this repository. Publication remains an external authority gate.
+- Current adoption work is portfolio dogfooding, verified-adopter evidence,
+  GitHub Agent Skill publication, and targeted registry/toolmaker interop.
 - Health verdict: healthy and actively maintained. See root `CLAUDE.md` for
   full agent-facing build, test, and release conventions.
+
+## Documentation authority and taxonomy
+
+| Scope | Authoritative source |
+|---|---|
+| Canonical bundle behavior and instructions | `skill-provenance/SKILL.md` and its routed references |
+| Bundle identity, inventory, hashes, and validation attestations | `skill-provenance/MANIFEST.yaml` |
+| Complete release history | Root `CHANGELOG.md` |
+| Portable recent release history | `skill-provenance/CHANGELOG.md` |
+| Current repository state and documentation routing | `PROJECT_CONTEXT.md` |
+| Intended future work | `ROADMAP.md` |
+| Agent-facing and executable trust boundaries | `AGENTIC_SURFACES.md` |
+| Search policy and provider action ledger | `ops/search-indexing.md` and dated `ops/search/` evidence |
+| Dated ecosystem observations | `docs/`; each note must preserve its source and measurement boundary |
+
+Root documentation and `skill-provenance/references/` are maintained
+references. `docs/` contains dated evidence notes, `ops/` contains operational
+policy and evidence, and `handoffs/` is a temporary queue rather than history.
+This file is the documentation index while those folders remain small. If a
+folder grows beyond a few independently maintained documents, add a local
+index before relying on bulk documentation audits.
+
+Root reference documents do not require frontmatter. Bundle documentation
+uses the per-file integer revision and hash recorded in `MANIFEST.yaml`;
+`ops/search-indexing.md` keeps its existing title, purpose, status, updated,
+owner, and open-task fields. Verify documentation claims with
+`validate.sh`, `release-surface-check.sh`, and the offline search contract
+before treating them as current. Migrate durable handoff content to the
+authority above, then remove the temporary handoff rather than archiving it.

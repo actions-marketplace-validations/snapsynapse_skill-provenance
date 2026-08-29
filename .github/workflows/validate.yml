@@ -42,3 +42,6 @@ jobs:
 
       - name: Test validator hash states
         run: ./.github/scripts/test-validate.sh
+
+      - name: Test standalone verifier pinning
+        run: ./.github/scripts/test-standalone-verify.sh

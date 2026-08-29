@@ -2,15 +2,20 @@
 
 ## Now
 
-- Review and publish the prepared 6.1.0 discovery and search-contract release
+- Review and publish the prepared 6.2.0 standalone-verification release
   only after explicit commit, deployment, release, and registry authorization.
-- Ship a standalone zero-install verifier and bootstrap path for authors
-  who do not use the Claude Code plugin.
-- Refresh the July 2026 ecosystem evidence before publishing the State of
-  Skill Versioning report or reusing competitive claims.
-- Confirm the GitHub Actions Marketplace listing and document the supported
-  stable action reference.
+- Publish through GitHub Agent Skill tooling after explicit authorization;
+  the dry-run passes but discovery search does not yet return this repository.
 - Dogfood manifests across portfolio skills and add a verified-adopters loop.
+- Use the dated skill-version drift evidence for targeted registry and
+  toolmaker interop, keeping reported observations distinct from live metrics.
+
+## Adoption evidence gate
+
+After the 6.2.0 verifier is public, measure verified adopters, GitHub Agent
+Skill discovery, registry interest, and interop responses before adding a new
+service surface. Lack of evidence should defer expansion rather than create a
+parallel monitoring or packaging system.
 
 ## Later
 
