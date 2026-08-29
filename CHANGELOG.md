@@ -7,6 +7,12 @@ The in-bundle file at `skill-provenance/CHANGELOG.md` is the active changelog
 that travels with the skill bundle and keeps only the five most recent entries
 to limit package weight. Older history remains here in the repo root.
 
+## Unreleased - 2026-08-28
+- README.md, index.html, llms.txt, search-audit.config.json, PROJECT_CONTEXT.md,
+  CLAUDE.md, and ROADMAP.md: Synchronized stable install links, release state,
+  GitHub Agent Skill discovery status, and post-release adoption work after
+  v6.2.0 publication. The immutable v6.2.0 bundle and archive are unchanged.
+
 ## 6.2.0 - 2026-08-28
 - skill-provenance/SKILL.md, skill-provenance/README.md, and
   skill-provenance/references/standalone-verification.md: Added no-plugin

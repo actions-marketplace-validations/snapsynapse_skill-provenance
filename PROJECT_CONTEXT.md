@@ -45,21 +45,23 @@ description (see the `SKILL_v4.md` → `SKILL.md`/`MANIFEST.yaml` snippet in
 - Assistant guide (pre-install verification): https://skillprovenance.dev/.well-known/assistant-guide.txt
 - Releases: https://github.com/snapsynapse/skill-provenance/releases
 
-## Current status (as of 2026-08-28 assessment)
+## Current status (as of 2026-08-28 release)
 
-- Stable public bundle release is 6.1.0. A local 6.2.0 adoption release adds
-  a standalone verifier, portable bootstrap prompt, and refreshed ecosystem
-  evidence. It is not committed, pushed, deployed, tagged, or published until
-  each release step is explicitly authorized.
+- Stable public bundle release is 6.2.0. It adds a standalone verifier,
+  portable bootstrap prompt, refreshed ecosystem evidence, and explicit
+  bundle-versus-GuideCheck tag-family guidance.
 - The validator now fails closed on unsafe or ambiguous paths, duplicate
   entries, manifest-listed symlinks, and unsupported inventory syntax.
   Packaging reuses that validator policy at each derived-package boundary.
 - Coverage is 41 core and 18 supplemental evals, 59 total, plus executable
   validator, action-input, packaging, and release-surface regression checks.
 - The GitHub Marketplace validation action is publicly listed and the stable
-  action reference is `snapsynapse/skill-provenance@v6.1.0`.
-- GitHub Agent Skill publication dry-run passes, but discovery search does not
-  yet return this repository. Publication remains an external authority gate.
+  action reference is `snapsynapse/skill-provenance@v6.2.0`.
+- GitHub Agent Skill validation and exact-tag preview pass, and `gh skill
+  search skill-provenance` returns this repository. The GitHub release carries
+  the validated `.skill` archive.
+- The ClawHub listing remains a separately published registry copy and may lag
+  the canonical GitHub release.
 - Current adoption work is portfolio dogfooding, verified-adopter evidence,
   GitHub Agent Skill publication, and targeted registry/toolmaker interop.
 - Health verdict: healthy and actively maintained. See root `CLAUDE.md` for

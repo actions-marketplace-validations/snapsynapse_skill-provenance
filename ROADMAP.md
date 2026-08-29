@@ -2,10 +2,10 @@
 
 ## Now
 
-- Review and publish the prepared 6.2.0 standalone-verification release
-  only after explicit commit, deployment, release, and registry authorization.
-- Publish through GitHub Agent Skill tooling after explicit authorization;
-  the dry-run passes but discovery search does not yet return this repository.
+- Measure verified adoption of the public 6.2.0 standalone-verification
+  release and GitHub Agent Skill discovery path.
+- Reconcile the separately published ClawHub copy after its user-controlled
+  license attestation and upload boundary are completed.
 - Dogfood manifests across portfolio skills and add a verified-adopters loop.
 - Use the dated skill-version drift evidence for targeted registry and
   toolmaker interop, keeping reported observations distinct from live metrics.
