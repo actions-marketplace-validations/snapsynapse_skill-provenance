@@ -15,6 +15,9 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - name: Verify repository search contract
+        run: node scripts/check-search.mjs
+
       - name: Verify bundle hashes
         uses: ./
         with:
@@ -33,3 +36,12 @@ jobs:
 
       - name: Verify release surfaces
         run: ./.github/scripts/release-surface-check.sh
+
+      - name: Verify action input transport
+        run: ./.github/scripts/action-security-check.sh
+
+      - name: Test validator hash states
+        run: ./.github/scripts/test-validate.sh
+
+      - name: Test standalone verifier pinning
+        run: ./.github/scripts/test-standalone-verify.sh

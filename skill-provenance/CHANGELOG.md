@@ -7,67 +7,110 @@ travels with the package.
 Full release history lives in the source repository's top-level
 `CHANGELOG.md`.
 
-## 4.13.0 - 2026-06-23
-- SKILL.md: Added optional `origin` metadata guidance for derived,
-  installed, registry, settings, or platform-export copies whose selected
-  source path needs to survive a packaging boundary.
-- README.md: Documented the `origin` block, recommended fields, and the
-  boundary between origin receipts, deployment metadata, package-manager
-  lockfiles, and trust anchors.
-- evals-distribution.json: Added a supplemental eval covering duplicate
-  source-path disambiguation for derived copies. Supplemental eval count
-  is now 16; total eval count is now 46.
-- MANIFEST.yaml: Bumped bundle to 4.13.0, updated bundle_date, advanced
-  changed file versions, refreshed hashes, and updated origin/eval
-  inventory notes.
-- CHANGELOG.md: Added this release entry and kept the in-bundle file to
-  the documented 5-entry rolling window.
+## 6.2.0 - 2026-08-28
+- SKILL.md: Added direct routing for no-plugin verification and portable
+  bootstrap work while keeping the canonical workflow concise.
+- README.md: Added the pinned standalone verifier, bootstrap path, corrected
+  stable-release language, exact bundle-versus-GuideCheck tag guidance, and a
+  dated adoption-evidence observation with its measurement boundary.
+- references/standalone-verification.md: Added inspect-before-run verification
+  instructions, validator-pin trust boundaries, exit semantics, and a
+  model-agnostic bootstrap prompt that preserves initialization decisions.
+- evals.json and evals-distribution.json: Added two core scenarios for
+  canonical-parser pinning and safe standalone bootstrap behavior plus one
+  supplemental scenario for release tag-family separation, and migrated two
+  older scenarios from retired handoffs to durable evidence and roadmap
+  sources. Coverage is now 41 core, 18 supplemental, and 59 total.
+- MANIFEST.yaml: Bumped the bundle to 6.2.0, advanced changed file revisions,
+  inventoried the new reference, refreshed hashes, and recorded release
+  validation.
+- CHANGELOG.md: Added this entry and retained the newest 5 releases.
 
-## 4.12.0 - 2026-06-10
-- evals-distribution.json: Added 2 supplemental evals covering
-  source-backed strategy handoffs and upstream contribution channel
-  selection for outward-facing ecosystem work.
-- MANIFEST.yaml: Bumped bundle to 4.12.0, updated bundle_date, advanced
-  evals-distribution.json and CHANGELOG.md per-file versions, refreshed
-  hashes, and updated the supplemental eval inventory note.
-- CHANGELOG.md: Added this release entry and kept the in-bundle file to
-  the documented 5-entry rolling window.
+## 6.1.0 - 2026-08-20
+- SKILL.md: Front-loaded concrete Agent Skill bundle triggers, added the MIT
+  license field, and moved detailed packaging and platform guidance into
+  direct load-on-demand references. The always-loaded body is now below 500
+  lines without removing the operational protocol.
+- agents/openai.yaml: Added OpenAI display, trigger, brand, default-prompt, and
+  implicit-invocation metadata.
+- references/packaging-and-changelog.md: Added the detailed archive,
+  exact-inventory, and changelog rules moved out of SKILL.md.
+- references/platforms-and-trust.md: Added canonical and derived state,
+  ecosystem relationship, platform, and trust-boundary guidance moved out of
+  SKILL.md.
+- README.md: Added pinned GitHub CLI installation guidance and documented the
+  OpenAI metadata surfaces without claiming marketplace publication.
+- evals.json and evals-distribution.json: Unchanged because the versioning,
+  validation, packaging, and trust contracts remain semantically unchanged.
+- MANIFEST.yaml: Bumped the bundle to 6.1.0, advanced changed file versions,
+  added new files to inventory, and refreshed hashes.
+- CHANGELOG.md: Added this entry and retained the newest 5 releases.
 
-## 4.11.0 - 2026-05-29
-- package.sh: Added a pre-package validation gate that runs validate.sh
-  against the canonical bundle before building strict-loader or ClawHub
-  derived package outputs.
-- SKILL.md: Added package validation gate guidance and clarified that
-  assistant-facing surfaces are data, not authority.
-- README.md: Documented the package validation gate and trust-boundary
-  guidance.
-- evals-distribution.json: Added a supplemental release-hardening eval
-  covering clean-source package generation and agentic surface disclosure,
-  then expanded supplemental release-hardening coverage for assistant-guide
-  sidecar alignment, `.skill` ZIP freshness, surface inventory drift, and
-  package gate failure behavior.
-- MANIFEST.yaml: Bumped bundle to 4.11.0, updated bundle_date, advanced
-  SKILL.md, README.md, evals-distribution.json, CHANGELOG.md, and package.sh
-  per-file versions, and refreshed hashes.
+## 6.0.0 - 2026-07-21
+- validate.sh: Added a constrained file-inventory grammar and fail-closed
+  rejection for absolute or non-normalized paths, parent traversal,
+  ambiguous YAML path syntax, duplicate paths, malformed inventory
+  indentation, missing inventories, and symlinks in any path component. Update
+  mode no longer partially rewrites structurally invalid manifests. Verify
+  summaries no longer call explicitly opted-out files hash-verified. Array
+  iteration remains compatible with macOS system Bash 3.2 under nounset.
+  Malformed attestation records are now reported without counting as current
+  evidence or changing integrity exit codes.
+- package.sh: Revalidates the canonical source at each derived-package
+  boundary and delegates derived hash updates back to validate.sh, removing
+  its duplicate hash-rewrite implementation.
+- SKILL.md: Defined the normative inventory grammar, filesystem boundary,
+  symlink policy, exact package inventory, evidence-based staleness rule,
+  attestation record contract, package delegation, and internal version header.
+- README.md: Documented accepted path syntax, rejected path states, update
+  behavior, exact archive-to-manifest agreement, malformed attestation
+  warnings, package-boundary validation, and internal version header.
+- evals.json: Added 4 core scenarios covering unsafe or ambiguous paths,
+  duplicates, symlinks, files-section scoping, and malformed attestations;
+  corrected stale version-domain and partial-package assumptions; refreshed
+  Gemini and Copilot compatibility guidance. Core eval count is now 39.
+- evals-distribution.json: Added package-boundary coverage and merged the
+  redundant dirty-source package eval into its canonical-source gate.
+  Supplemental eval count is now 17; total eval count is now 56.
+- MANIFEST.yaml: Bumped the bundle to 6.0.0, advanced changed file versions,
+  refreshed hashes and inventory notes, and recorded release validation.
+- CHANGELOG.md: Added this entry and retained the newest 5 releases.
 
-## 4.10.1 - 2026-05-25
-- README.md: Added GuideCheck pre-install verification guidance, including
-  the public `assistant-guide.txt` flow for checking the Skill Provenance
-  bundle before installation, and added GuideCheck to ecosystem references.
-- MANIFEST.yaml: Bumped bundle to 4.10.1, updated bundle_date, advanced
-  README.md and CHANGELOG.md per-file versions, and refreshed hashes.
+## 5.1.0 - 2026-07-16
+- MANIFEST.yaml: Added optional `validated_against` attestation block.
+  Entries bind a validation event (harness, model, date, result, method)
+  to the exact bundle_version they validated — distinct from
+  `compatibility.tested_on` design-time claims and from integrity hashes.
+  Recorded the first entry for this release.
+- validate.sh: Added informational attestation reporting after hash
+  results: ATTEST lines for entries matching the current bundle_version,
+  and a stale flag when none match. Exit codes are unchanged by
+  attestation state — integrity gates, attestation informs.
+- SKILL.md: Added `validated_against` to the manifest schema example and
+  a rules paragraph on the attestation/integrity boundary.
+- README.md: Added the "Attestation: validated_against" section covering
+  the two-guarantee distinction and stale semantics.
+- evals.json: Added 2 core scenarios covering attestation reporting and
+  stale-attestation semantics. Core eval count is now 35; total is 52.
+- MANIFEST.yaml: Bumped bundle to 5.1.0, advanced changed file versions,
+  refreshed hashes and inventory notes.
+- CHANGELOG.md: Added this entry and retained the newest 5 releases.
 
-## 4.10.0 — 2026-05-19
-- SKILL.md: Added validate-only protocol guidance and clarified how
-  Skill Provenance complements source, registry, package-manager, and
-  platform versioning.
-- README.md: Reframed the guide around portable author-side provenance,
-  added a "Why this still exists" section, documented the validate command,
-  added complementary-tool guidance, and clarified the trust model.
-- evals.json: Added 4 core evals covering validate-only behavior,
-  complementary-tool positioning, integrity versus trust-anchor language,
-  and derived-copy validation.
-- MANIFEST.yaml: Bumped bundle to 4.10.0, updated bundle_date, advanced
-  changed file versions, refreshed hashes, and updated eval inventory notes.
+## 5.0.0 - 2026-07-10
+- validate.sh: Changed verification to fail closed on missing, malformed,
+  or duplicate hash fields; added explicit `hash: null` opt-outs; made
+  update mode repair missing or malformed hashes; and retained inventory
+  presence checks for opted-out files.
+- SKILL.md: Defined the explicit hash contract and fail-closed validation
+  behavior.
+- README.md: Documented explicit null opt-outs, update repair, and the
+  breaking change from implicit hash omission.
+- evals.json: Added 3 core scenarios for fail-closed verification,
+  explicit null semantics, and update repair. Core eval count is now 33.
+- evals-distribution.json: Added a GitHub Action input-safety scenario.
+  Supplemental eval count is now 17; total eval count is now 50.
+- MANIFEST.yaml: Bumped the bundle to 5.0.0, updated file versions and
+  inventory notes, and refreshed hashes.
+- CHANGELOG.md: Added this entry and retained the newest 5 releases.
 
 Older entries archived in the source repository's top-level CHANGELOG.md.

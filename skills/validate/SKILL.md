@@ -1,9 +1,11 @@
 ---
+name: validate
 description: >
   Run a focused validation check for a skill bundle. Use when the user asks
   to validate, verify hashes, check MANIFEST.yaml, confirm files are present,
   or distinguish a canonical bundle from a derived install or registry copy
   without opening or closing a full editing session.
+license: MIT
 ---
 
 # Skill Provenance: Validate
@@ -32,7 +34,9 @@ whether a copy appears to be canonical or derived.
    - File count checked
    - Missing files
    - Hash mismatches
-   - Files skipped because no hash is recorded
+   - Explicit `hash: null` opt-outs
+   - Structural, unsafe-path, duplicate-path, and symlink errors
+   - Matching, stale, or malformed `validated_against` records when present
    - Exit code or equivalent pass/fail result
 4. **Identify copy type.** Use `MANIFEST.yaml` and local contents to say
    whether the copy appears to be:
@@ -54,7 +58,7 @@ Keep the response concise:
 ```text
 Bundle: my-skill 1.2.0
 Copy type: canonical source bundle
-Files: 7 checked, 0 missing, 0 mismatched, 0 skipped
+Files: 7 checked, 0 missing, 0 mismatched, 0 explicit opt-outs
 Result: pass
 ```
 If validation fails, name the specific files and explain that a mismatch

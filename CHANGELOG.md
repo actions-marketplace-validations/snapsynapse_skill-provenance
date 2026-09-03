@@ -7,6 +7,173 @@ The in-bundle file at `skill-provenance/CHANGELOG.md` is the active changelog
 that travels with the skill bundle and keeps only the five most recent entries
 to limit package weight. Older history remains here in the repo root.
 
+## Unreleased - 2026-08-28
+- README.md, index.html, llms.txt, search-audit.config.json, PROJECT_CONTEXT.md,
+  CLAUDE.md, and ROADMAP.md: Synchronized stable install links, release state,
+  GitHub Agent Skill discovery status, and post-release adoption work after
+  v6.2.0 publication. The immutable v6.2.0 bundle and archive are unchanged.
+
+## 6.2.0 - 2026-08-28
+- skill-provenance/SKILL.md, skill-provenance/README.md, and
+  skill-provenance/references/standalone-verification.md: Added no-plugin
+  verification, a portable bootstrap path, validator-pin trust boundaries,
+  exact bundle-versus-GuideCheck tag guidance, corrected stable-release
+  language, and dated adoption evidence.
+- verify.sh, .github/scripts/test-standalone-verify.sh,
+  .github/scripts/release-surface-check.sh, and
+  .github/workflows/validate.yml: Added a pinned canonical-validator wrapper,
+  local and downloaded tamper rejection, exit-code and cleanup coverage,
+  non-flaky archive inventory checks, release-surface enforcement, and CI
+  execution.
+- skill-provenance/evals.json and skill-provenance/evals-distribution.json:
+  Added two core scenarios covering canonical parser pinning and bootstrap
+  decision gates plus one supplemental scenario for release tag-family
+  separation, and migrated two older scenarios from retired handoffs to
+  durable evidence and roadmap sources. Coverage is now 41 core and 18
+  supplemental scenarios, 59 total.
+- docs/state-of-skill-versioning-2026.md, README.md, index.html, llms.txt,
+  sitemap.xml, AGENTIC_SURFACES.md, PROJECT_CONTEXT.md, ROADMAP.md, AGENTS.md,
+  and CLAUDE.md: Added the dated ecosystem observation and reproduction
+  boundary, exposed the standalone path and GitHub Pages agent surfaces,
+  corrected public-release truth and eval counts, documented source authority,
+  and migrated durable roadmap and session state.
+- search-audit.config.json and ops/search-indexing.md: Added the deployed
+  standalone verifier, release tag-family copy, and agent-surface links to
+  deterministic repository and production search contracts while preserving
+  the historical console baseline.
+- .codex-plugin/plugin.json: Advanced package metadata to 6.2.0 and disclosed
+  standalone verification and bootstrap capability.
+- skill-provenance/MANIFEST.yaml, skill-provenance/CHANGELOG.md, and
+  skill-provenance.skill: Prepared bundle 6.2.0, advanced file revisions,
+  refreshed hashes and rolling history, recorded validation, and rebuilt the
+  derived archive.
+
+## 6.1.0 - 2026-08-20
+- skill-provenance/SKILL.md, skill-provenance/agents/openai.yaml,
+  skill-provenance/references/packaging-and-changelog.md, and
+  skill-provenance/references/platforms-and-trust.md: Improved concrete agent
+  triggering, added OpenAI interface metadata, and moved deep package and
+  platform guidance into direct references so the canonical body stays under
+  500 lines.
+- skill-provenance/README.md and root README.md: Added pinned GitHub CLI
+  preview and Codex installation guidance, documented the Codex plugin
+  package, and avoided claims of unpublished marketplace availability.
+- skills/open/SKILL.md, skills/validate/SKILL.md, skills/close/SKILL.md,
+  skills/handoff/SKILL.md, and skills/bootstrap/SKILL.md: Added the names and
+  licenses required for GitHub Agent Skill publication validation while
+  preserving existing Claude plugin command names.
+- .codex-plugin/plugin.json and .claude-plugin/plugin.json: Added the Codex
+  plugin package and advanced the Claude plugin patch version for synchronized
+  discovery metadata.
+- search-audit.config.json, scripts/check-search.mjs,
+  scripts/check-production-search.mjs, ops/search-indexing.md,
+  .github/workflows/validate.yml, and
+  .github/workflows/production-search.yml: Added deterministic repository and
+  manually triggered production search contracts plus the dated GSC action
+  ledger.
+- .well-known/assistant-guide.txt and its sidecar: Advanced the guide to 1.2.0,
+  repaired its cloned-repository working directory, updated bundle
+  applicability to 6.1.x, and refreshed its hash and planned immutable release
+  metadata.
+- index.html, sitemap.xml, AGENTIC_SURFACES.md, PROJECT_CONTEXT.md, CLAUDE.md,
+  and ROADMAP.md: Updated public discovery copy, modified dates, surface
+  disclosures, current state, and release sequencing.
+- skill-provenance/MANIFEST.yaml, skill-provenance/CHANGELOG.md, and
+  skill-provenance.skill: Prepared bundle 6.1.0, advanced file revisions,
+  refreshed hashes and rolling history, and rebuilt the derived archive.
+- skill-provenance/evals.json and skill-provenance/evals-distribution.json:
+  Unchanged because the operational contracts remain semantically unchanged.
+
+## 6.0.0 - 2026-07-21
+- skill-provenance/validate.sh: Added a constrained, fail-closed inventory
+  grammar; rejected absolute and non-normalized paths, parent traversal,
+  ambiguous YAML path syntax, duplicate paths, malformed inventory
+  indentation, missing inventories, and symlinks in any path component before
+  filesystem reads. Prevented update mode from partially rewriting an
+  invalid manifest and corrected success summaries so explicit null-hash
+  opt-outs are not described as hash-verified. Added non-gating warnings for
+  malformed attestation records and excluded them from current evidence.
+- skill-provenance/package.sh: Revalidated the canonical source at every
+  derived-package boundary and delegated derived hash updates to validate.sh,
+  removing the duplicate hash-rewrite implementation.
+- .github/scripts/test-validate.sh: Added executable regression fixtures for
+  traversal, absolute paths, dot and empty components, backslashes, YAML
+  quoting/comments/anchors/aliases/tags, malformed indentation, missing
+  inventories, duplicate paths, symlinks, legitimate nested paths, parser
+  section isolation, and macOS system Bash 3.2 compatibility.
+- skill-provenance/SKILL.md, skill-provenance/README.md, SECURITY.md, and
+  AGENTIC_SURFACES.md: Documented the manifest filesystem boundary, accepted
+  grammar, exact package inventory, evidence-based staleness, malformed
+  attestation semantics, package delegation, trust boundary, residual risks,
+  and reconciled internal file-version headers with the manifest.
+- skill-provenance/evals.json and skill-provenance/evals-distribution.json:
+  Added 4 core scenarios, added and consolidated package-boundary coverage,
+  corrected stale package and version-domain assumptions, and refreshed
+  platform paths. Coverage is now 39 core and 17 supplemental, 56 total.
+- skill-provenance/MANIFEST.yaml and skill-provenance/CHANGELOG.md: Prepared
+  bundle 6.0.0, advanced per-file versions, refreshed hashes and rolling
+  history, and recorded release validation.
+- README.md, AGENTS.md, CLAUDE.md, PROJECT_CONTEXT.md, ROADMAP.md, index.html,
+  and sitemap.xml: Updated release metadata, eval counts, current project
+  state, roadmap priorities, action example, and public modified dates.
+- skills/open/SKILL.md, skills/validate/SKILL.md,
+  skills/bootstrap/SKILL.md, and skills/close/SKILL.md: Synchronized focused
+  plugin workflows with constrained grammar, exact hash opt-outs,
+  evidence-based staleness, derived strict packaging, and final validation.
+- skill-provenance.skill: Rebuilt the Claude Settings ZIP from the canonical
+  6.0.0 bundle.
+
+## 5.1.0 - 2026-07-16
+- skill-provenance/MANIFEST.yaml: Added optional `validated_against`
+  attestation block. Entries bind a validation event (harness, model,
+  date, result, method) to the exact bundle_version they validated —
+  distinct from `compatibility.tested_on` design-time claims and from
+  integrity hashes. Recorded the first entry for this release.
+- skill-provenance/validate.sh: Added informational attestation reporting
+  after hash results: ATTEST lines for entries matching the current
+  bundle_version, and a stale flag when none match. Exit codes are
+  unchanged by attestation state — integrity gates, attestation informs.
+- skill-provenance/SKILL.md: Added `validated_against` to the manifest
+  schema example and a rules paragraph on the attestation/integrity
+  boundary.
+- skill-provenance/README.md: Added the "Attestation: validated_against"
+  section covering the two-guarantee distinction and stale semantics.
+- skill-provenance/evals.json: Added 2 core scenarios covering attestation
+  reporting and stale-attestation semantics. Core eval count is now 35;
+  total is 52.
+- .github/scripts/test-validate.sh: Added regression tests asserting that
+  attestation state (matching, stale, or absent) never changes validate.sh
+  exit codes and that ATTEST reporting renders in both cases.
+- README.md, AGENTS.md, CLAUDE.md: Updated eval-count declarations to 35
+  core / 52 total.
+- skill-provenance/MANIFEST.yaml: Bumped bundle to 5.1.0, advanced changed
+  file versions, refreshed hashes and inventory notes.
+
+## 5.0.0 - 2026-07-10
+- skill-provenance/validate.sh: Made manifest verification fail closed on
+  missing, malformed, or duplicate hash fields; added explicit
+  `hash: null` opt-outs; repaired missing or malformed hashes in update
+  mode; and kept inventory checks active for opted-out files.
+- action.yml: Transported caller-controlled `bundle-path` through an
+  environment variable instead of interpolating it into Bash source.
+- .github/scripts/action-security-check.sh,
+  .github/scripts/test-validate.sh, .github/workflows/validate.yml: Added
+  and enabled regression coverage for action input transport and validator
+  hash-state behavior.
+- skill-provenance/SKILL.md and skill-provenance/README.md: Defined and
+  documented the explicit hash contract and breaking fail-closed behavior.
+- skill-provenance/evals.json: Added 3 core security and recovery evals.
+- skill-provenance/evals-distribution.json: Added a composite-action shell
+  safety eval. Coverage is now 33 core and 17 supplemental, 50 total.
+- skill-provenance/MANIFEST.yaml and skill-provenance/CHANGELOG.md: Bumped
+  the canonical bundle to 5.0.0, advanced per-file versions, updated the
+  rolling history, and refreshed inventory metadata.
+- README.md, AGENTS.md, CLAUDE.md, AGENTIC_SURFACES.md, and index.html:
+  Updated eval counts, executable-surface disclosure, release version, and
+  public modified date.
+- skill-provenance.skill: Rebuilt the Claude Settings ZIP from the
+  canonical 5.0.0 bundle.
+
 ## 4.13.1 - 2026-06-23
 - action.yml: Added a root GitHub Actions Marketplace composite action
   wrapper that runs `skill-provenance/validate.sh` against a configurable

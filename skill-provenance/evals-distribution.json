@@ -169,8 +169,11 @@
         "../SECURITY.md"
       ],
       "expectations": [
+        "Introduces controlled hash mismatch and missing-file cases only in disposable copies",
         "Runs validate.sh against the canonical bundle before building derived package outputs",
         "Stops package generation if manifest hashes mismatch or listed files are missing",
+        "Confirms strict and ClawHub output directories are absent or incomplete after failed validation",
+        "Treats any package creation after failed canonical validation as a release blocker",
         "Does not treat generated strict or registry packages as canonical source bundles",
         "Checks that assistant-facing surfaces are inventoried as data rather than authority",
         "Flags release preparation as incomplete if the disclosure is missing after assistant-facing surfaces change"
@@ -246,31 +249,12 @@
       ]
     },
     {
-      "id": 113,
-      "name": "package_gate_blocks_dirty_manifest",
-      "description": "Tests that package.sh exits nonzero and creates no derived package when canonical bundle validation fails.",
-      "prompt": "Simulate a dirty canonical bundle and confirm package.sh refuses to produce strict or ClawHub outputs.",
-      "files": [
-        "MANIFEST.yaml",
-        "package.sh",
-        "validate.sh",
-        "README.md"
-      ],
-      "expectations": [
-        "Introduces or detects a controlled manifest mismatch in a disposable copy rather than damaging the source tree",
-        "Runs package.sh against that dirty copy and observes a nonzero exit before package output is created",
-        "Confirms strict and ClawHub package directories are absent or empty after the failed run",
-        "Restores or discards the dirty disposable copy after the negative test",
-        "Treats package creation after failed canonical validation as a release blocker"
-      ]
-    },
-    {
       "id": 114,
-      "name": "source_backed_strategy_handoff",
-      "description": "Tests that strategy handoffs with external competitive claims preserve enough source evidence for later agents to safely publish or implement from them.",
-      "prompt": "Review this adoption strategy handoff before we use it to rewrite public positioning. It says several competitor facts were verified by a prior research run, but only the conclusions are written down.",
+      "name": "source_backed_strategy_evidence",
+      "description": "Tests that dated ecosystem evidence preserves enough source and measurement context for later agents to safely reuse it in public positioning.",
+      "prompt": "Review this dated skill-versioning evidence note before we reuse its registry-drift figures in public positioning. Confirm what is directly sourced, what cannot be reproduced from the rolling endpoint, and what must be refreshed.",
       "files": [
-        "../handoffs/2026-06-09-adoption-strategy-handoff.md",
+        "../docs/state-of-skill-versioning-2026.md",
         "../README.md",
         "../index.html",
         "../llms.txt",
@@ -288,9 +272,10 @@
       "id": 115,
       "name": "upstream_contribution_channel_selection",
       "description": "Tests that outward-facing upstream spec work follows the target project's current contribution process instead of assuming issue, PR, or discussion workflow.",
-      "prompt": "Prepare the next step for proposing optional version and integrity metadata to an upstream Agent Skills spec repo. The handoff says to file an issue, but we have not checked the upstream contribution guide yet.",
+      "prompt": "Prepare the next evidence-led upstream step on optional version and integrity metadata. Prior discussion happened in an issue, but we have not checked whether the project's current contribution guide now prefers an issue, discussion, or pull request.",
       "files": [
-        "../handoffs/2026-06-09-adoption-strategy-handoff.md",
+        "../ROADMAP.md",
+        "../docs/state-of-skill-versioning-2026.md",
         "../README.md",
         "README.md",
         "SKILL.md"
@@ -319,6 +304,65 @@
         "Distinguishes origin metadata from deployments metadata: origin records what crossed the boundary, deployments records where copies live",
         "States that Skill Provenance does not choose between duplicate source paths, manage installs, resolve updates, or replace package-manager lockfiles",
         "Treats origin metadata as audit receipt data rather than a trust anchor"
+      ]
+    },
+    {
+      "id": 117,
+      "name": "github_action_bundle_path_shell_safety",
+      "description": "Tests that the composite GitHub Action passes caller-controlled bundle-path input as data and cannot execute embedded shell syntax.",
+      "prompt": "In a disposable GitHub Actions fixture, invoke the validation action with a bundle-path containing spaces, quotes, command separators, and a command that would create a sentinel file. Confirm the input cannot execute shell code.",
+      "files": [
+        "../action.yml",
+        "validate.sh",
+        "MANIFEST.yaml"
+      ],
+      "expectations": [
+        "Passes inputs.bundle-path through an environment variable or equivalently safe data channel rather than interpolating it into Bash source",
+        "Treats quotes, semicolons, command substitutions, and newlines in the input as literal path characters",
+        "Does not create the sentinel file or execute any injected command",
+        "Fails only with the expected invalid-path or missing-manifest result for the adversarial value",
+        "Still validates a legitimate bundle path containing spaces",
+        "Keeps GITHUB_ACTION_PATH safely quoted when invoking validate.sh"
+      ]
+    },
+    {
+      "id": 118,
+      "name": "package_gate_enforces_manifest_filesystem_boundary",
+      "description": "Tests that every derived package build delegates path, duplicate, and symlink policy to the canonical validator immediately before copying files.",
+      "prompt": "In separate disposable source bundles, add a parent-traversal path, a duplicate path, and a manifest-listed symlink, then attempt strict, ClawHub, and all-mode package builds.",
+      "files": [
+        "MANIFEST.yaml",
+        "package.sh",
+        "validate.sh",
+        "README.md"
+      ],
+      "expectations": [
+        "Runs package tests only in disposable copies and does not alter the canonical bundle",
+        "Observes validate.sh reject each unsafe inventory before package files are copied",
+        "Confirms strict, ClawHub, and all-mode builds exit nonzero and leave no completed derived bundle for an invalid source",
+        "Confirms all mode revalidates the canonical source at each derived-package boundary",
+        "Keeps validate.sh as the single parser and policy authority instead of duplicating a second manifest grammar in package.sh",
+        "Still builds both variants from a clean canonical manifest"
+      ]
+    },
+    {
+      "id": 119,
+      "name": "release_tag_family_disambiguation",
+      "description": "Tests release guidance when one repository publishes bundle releases and separately versioned GuideCheck assistant-guide releases.",
+      "prompt": "This repository has v6.1.0 and guidecheck-1.2.0 tags, and a provider labels guidecheck-1.2.0 as Latest. Give me the safe install and release references for the Agent Skill, validation action, .skill archive, and assistant guide.",
+      "files": [
+        "../README.md",
+        "../.well-known/assistant-guide-manifest.txt",
+        "MANIFEST.yaml",
+        "README.md"
+      ],
+      "expectations": [
+        "Uses an exact vX.Y.Z bundle tag for the Agent Skill, GitHub Action, and .skill archive",
+        "Uses guidecheck-X.Y.Z only for the assistant-guide artifact and its immutable-release metadata",
+        "Does not use a generic @latest reference or /releases/latest URL for bundle installation",
+        "Distinguishes the current stable public bundle from an uncommitted, untagged, or unpublished local candidate",
+        "Treats provider Latest labels as ambiguous when multiple release tag families share one repository",
+        "Does not retag, publish, deploy, or alter provider state without separate authorization"
       ]
     }
   ]

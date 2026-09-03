@@ -1,4 +1,5 @@
 ---
+name: handoff
 description: >
   Generate a handoff note summarizing skill project state for a future
   session or collaborator. Use when crossing a non-persistent boundary
@@ -6,6 +7,7 @@ description: >
   or when the user explicitly asks for a handoff note. Triggers on:
   "generate a handoff", "write a handoff note", "summarize for next
   session", "prepare handoff", "what should the next session know".
+license: MIT
 ---
 
 # Skill Provenance: Handoff

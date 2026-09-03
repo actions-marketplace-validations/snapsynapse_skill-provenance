@@ -68,14 +68,6 @@ if [ ! -f "$MANIFEST" ]; then
   fail "MANIFEST.yaml not found in $BUNDLE_DIR"
 fi
 
-if command -v shasum >/dev/null 2>&1; then
-  sha256_hash() { shasum -a 256 "$1" | awk '{print $1}'; }
-elif command -v sha256sum >/dev/null 2>&1; then
-  sha256_hash() { sha256sum "$1" | awk '{print $1}'; }
-else
-  fail "neither shasum nor sha256sum found"
-fi
-
 validate_source_bundle() {
   if [ ! -x "$BUNDLE_DIR/validate.sh" ]; then
     fail "validate.sh is missing or not executable in $BUNDLE_DIR"
@@ -87,9 +79,11 @@ validate_source_bundle() {
 
 manifest_paths() {
   awk '
-    /^[[:space:]]*-[[:space:]]*path:[[:space:]]*/ {
+    /^files:$/ { in_files = 1; next }
+    in_files && /^[^[:space:]#]/ { in_files = 0 }
+    in_files && /^  - path: / {
       line = $0
-      sub(/^[[:space:]]*-[[:space:]]*path:[[:space:]]*/, "", line)
+      sub(/^  - path: /, "", line)
       print line
     }
   ' "$MANIFEST"
@@ -234,10 +228,17 @@ rewrite_manifest() {
         next
       }
 
-      if ($0 ~ /^[[:space:]]*-[[:space:]]*path:[[:space:]]*/) {
+      if ($0 ~ /^[^[:space:]#]/) {
+        flush_entry()
+        in_files = 0
+        print
+        next
+      }
+
+      if ($0 ~ /^  - path: /) {
         flush_entry()
         path = $0
-        sub(/^[[:space:]]*-[[:space:]]*path:[[:space:]]*/, "", path)
+        sub(/^  - path: /, "", path)
         entry = $0 ORS
         keep_entry = include_path(path)
         next
@@ -253,82 +254,6 @@ rewrite_manifest() {
   mv "$temp_file" "$manifest_file"
 }
 
-update_hashes() {
-  local bundle_dir="$1"
-  local manifest_file="$bundle_dir/MANIFEST.yaml"
-  local updates_file
-  local temp_manifest
-  local current_path=""
-  local current_hash=""
-  local path=""
-  local expected=""
-  local actual=""
-
-  updates_file="$(mktemp "${TMPDIR:-/tmp}/skill-provenance-updates.XXXXXX")"
-  temp_manifest="$(mktemp "${TMPDIR:-/tmp}/skill-provenance-manifest.XXXXXX")"
-
-  declare -a paths=()
-  declare -a expected_hashes=()
-
-  while IFS= read -r line; do
-    if [[ "$line" =~ ^[[:space:]]*-[[:space:]]*path:[[:space:]]*(.+)$ ]]; then
-      if [ -n "$current_path" ]; then
-        paths+=("$current_path")
-        expected_hashes+=("$current_hash")
-      fi
-      current_path="${BASH_REMATCH[1]}"
-      current_hash=""
-      continue
-    fi
-    if [[ "$line" =~ ^[[:space:]]*hash:[[:space:]]*sha256:([a-f0-9]+)$ ]]; then
-      current_hash="${BASH_REMATCH[1]}"
-    fi
-  done < "$manifest_file"
-
-  if [ -n "$current_path" ]; then
-    paths+=("$current_path")
-    expected_hashes+=("$current_hash")
-  fi
-
-  for i in "${!paths[@]}"; do
-    path="${paths[$i]}"
-    expected="${expected_hashes[$i]}"
-    [ -n "$expected" ] || continue
-    actual="$(sha256_hash "$bundle_dir/$path")"
-    if [ "$actual" != "$expected" ]; then
-      printf '%s\t%s\n' "$path" "$actual" >> "$updates_file"
-    fi
-  done
-
-  awk -v updates_file="$updates_file" '
-    BEGIN {
-      while ((getline line < updates_file) > 0) {
-        split(line, fields, "\t")
-        replacements[fields[1]] = fields[2]
-      }
-      close(updates_file)
-      current_path = ""
-    }
-    {
-      line = $0
-      if (line ~ /^[[:space:]]*-[[:space:]]*path:[[:space:]]*/) {
-        current_path = line
-        sub(/^[[:space:]]*-[[:space:]]*path:[[:space:]]*/, "", current_path)
-      }
-      if (current_path != "" &&
-          (current_path in replacements) &&
-          line ~ /^[[:space:]]*hash:[[:space:]]*sha256:[a-f0-9]+[[:space:]]*$/) {
-        sub(/sha256:[a-f0-9]+/, "sha256:" replacements[current_path], line)
-        current_path = ""
-      }
-      print line
-    }
-  ' "$manifest_file" > "$temp_manifest"
-
-  mv "$temp_manifest" "$manifest_file"
-  rm -f "$updates_file"
-}
-
 build_variant() {
   local mode="$1"
   local output_parent="$2"
@@ -342,6 +267,11 @@ build_variant() {
       fail "internal error: unsupported variant $mode"
       ;;
   esac
+
+  # Keep validate.sh as the single parser and policy authority. Re-run it at
+  # each package boundary so `all` mode cannot build a later variant from a
+  # source bundle that changed after the first variant was produced.
+  validate_source_bundle
 
   if [ -e "$variant_parent" ]; then
     fail "output path already exists: $variant_parent"
@@ -360,11 +290,10 @@ build_variant() {
       ;;
   esac
 
-  update_hashes "$dest_dir"
+  "$BUNDLE_DIR/validate.sh" --update "$dest_dir"
+  "$BUNDLE_DIR/validate.sh" "$dest_dir"
   echo "Built $mode package at $dest_dir"
 }
-
-validate_source_bundle
 
 if [ "$MODE" = "all" ]; then
   build_variant "strict" "$OUTPUT_PARENT/strict"
