@@ -7,11 +7,120 @@ The in-bundle file at `skill-provenance/CHANGELOG.md` is the active changelog
 that travels with the skill bundle and keeps only the five most recent entries
 to limit package weight. Older history remains here in the repo root.
 
-## Unreleased - 2026-08-28
+## 2026-09-23 - 7.0.0 release surfaces
+- skill-provenance/MANIFEST.yaml: Recorded the 7.0.0 validated_against
+  entry for Anthropic Claude Code with claude-opus-5-5.
+- README.md, index.html, llms.txt, and search-audit.config.json: Moved the
+  stable install, preview, action, and release links from v6.3.0 to v7.0.0.
+- CITATION.cff and .codex-plugin/plugin.json: Set version 7.0.0 and the
+  2026-09-23 release date.
+- CLAUDE.md, PROJECT_CONTEXT.md, and ROADMAP.md: Recorded 7.0.0 as the
+  stable release and its breaking complete-inventory change.
+- docs/release-provenance.md: Recorded the v7.0.0 release asset size and
+  digest.
+- docs/standards-integration-status.md: Marked 7.0.0 as released.
+- skill-provenance.skill: Rebuilt from the canonical bundle.
+
+## 2026-09-23 - Status note inventory correction (repo only)
+- docs/standards-integration-status.md: Updated the minimal provenance
+  contract. Unlisted files now fail verification as of bundle 7.0.0, so the
+  note no longer records the validator as unable to detect additions; the
+  2026-09-24 observation is kept as the history of the gap.
+
+## Unreleased - 2026-09-23
+- search-audit.config.json: Repinned the verify.sh search contract to the
+  7.0.0 validator SHA-256. The stale pin failed the repository search check,
+  the first CI step, after the 7.0.0 merge.
+- .github/scripts/release-surface-check.sh: Required the search contract's
+  verify.sh pin to match the current validator hash so the two pins cannot
+  drift apart again.
+
+## 7.0.0 - 2026-09-23
+- skill-provenance/validate.sh: Closed the unlisted-file gap observed
+  2026-09-24, where a bundle containing a file absent from MANIFEST.yaml still
+  verified with exit 0. The validator now walks the bundle root in pure Bash
+  and reports every unlisted file, symlink, or special file as `UNLISTED`.
+  Unlisted entries fail verification (exit 1) unless `--allow-unlisted` is
+  given, which reports them as warnings without verifying them. Only the root
+  MANIFEST.yaml is exempt. Unlisted symlinks are never followed, control
+  characters in reported names are escaped so filenames cannot forge report
+  lines, unreadable directories fail closed, and update mode never adds
+  unlisted files. Summaries now include an unlisted count. Breaking: bundles
+  that previously passed with extra files now fail.
+- .github/scripts/test-validate.sh: Added regression fixtures for root,
+  nested, dotfile, nested-manifest, symlinked-directory, dangling-symlink,
+  FIFO, forged-newline, and unreadable-directory entries, empty directories,
+  `--allow-unlisted` in either argument position, and update mode refusing to
+  rewrite or extend the manifest. Cleaned up earlier fixtures that now count
+  as unlisted. Passes under Bash 5.3 and macOS system Bash 3.2.
+- skill-provenance/SKILL.md, skill-provenance/README.md, and
+  skill-provenance/references/platforms-and-trust.md: Corrected the
+  completeness claim, stated the complete-inventory rule and its only
+  exemption, and documented `--allow-unlisted`, new-file workflow, and exit
+  semantics.
+- skill-provenance/evals.json: Added a core scenario for unlisted-file
+  inventory failure. Coverage is now 43 core, 21 supplemental, and 64 total.
+- skill-provenance/MANIFEST.yaml and skill-provenance/CHANGELOG.md: Prepared
+  bundle 7.0.0, advanced per-file versions, refreshed hashes and notes, and
+  rolled the in-bundle history to the newest 5 entries.
+- verify.sh: Repinned the standalone wrapper to the new validator SHA-256.
+- skills/validate/SKILL.md, skills/open/SKILL.md, and skills/close/SKILL.md:
+  Added unlisted-entry reporting and the list-before-update rule.
+- README.md, AGENTS.md, SECURITY.md, and AGENTIC_SURFACES.md: Updated
+  verification comments, exit semantics, in-scope threats, and surface trust
+  boundaries for unlisted files.
+- README.md, AGENTS.md, CLAUDE.md, PROJECT_CONTEXT.md, and index.html:
+  Synchronized eval counts to 43 core and 64 total. Public install and
+  release links remain on the published v6.3.0 release until 7.0.0 is tagged.
+- skill-provenance.skill: Rebuilt from the canonical bundle.
+
+## Unreleased - 2026-09-05
 - README.md, index.html, llms.txt, search-audit.config.json, PROJECT_CONTEXT.md,
   CLAUDE.md, and ROADMAP.md: Synchronized stable install links, release state,
   GitHub Agent Skill discovery status, and post-release adoption work after
   v6.2.0 publication. The immutable v6.2.0 bundle and archive are unchanged.
+- CITATION.cff, docs/adoption-evidence.md,
+  .github/ISSUE_TEMPLATE/compatibility-report.yml, and README.md: Added
+  citation metadata plus a reproducible compatibility and verified-adoption
+  evidence path without treating distribution or interest as production use.
+- docs/release-provenance.md, audits/openssf-scorecard-2026-09-05.json,
+  PROJECT_CONTEXT.md, and ROADMAP.md: Classified release artifacts, recorded a
+  read-only per-control trust baseline, and routed signing, attestations,
+  governance, DOI publication, and OpenSSF programs to later gated work.
+- .github/scripts/release-surface-check.sh and ROADMAP.md: Closed the observed
+  release-check gap by requiring exact archive inventory agreement, including
+  rejection of ignored operating-system metadata; the candidate archive was
+  cleaned before release.
+
+## 6.3.0 - 2026-09-05
+- CITATION.cff, docs/adoption-evidence.md,
+  .github/ISSUE_TEMPLATE/compatibility-report.yml, and README.md: Added
+  citation metadata plus a reproducible compatibility and verified-adoption
+  evidence path without treating distribution or interest as production use.
+- docs/release-provenance.md, audits/openssf-scorecard-2026-09-05.json,
+  PROJECT_CONTEXT.md, and ROADMAP.md: Classified release artifacts, recorded a
+  read-only per-control trust baseline, and routed signing, attestations,
+  governance, DOI publication, and OpenSSF programs to later gated work.
+- .github/scripts/release-surface-check.sh: Required exact `.skill` archive
+  inventory agreement so ignored or incidental files cannot pass the release
+  gate merely because every required file is present.
+- skill-provenance/evals.json: Added a core verified-adoption evidence
+  scenario that keeps distribution, interest, private confirmation, and
+  unknown evidence distinct.
+- skill-provenance/evals-distribution.json: Added three supplemental scenarios
+  for release artifact subjects, citation metadata without an unresolved DOI,
+  and per-control Scorecard evidence discipline, and strengthened archive
+  inventory evaluation to reject unexpected non-bundle files. Coverage is now
+  42 core and 21 supplemental scenarios, 63 total.
+- skill-provenance/MANIFEST.yaml and skill-provenance/CHANGELOG.md: Prepared
+  bundle 6.3.0, advanced changed file revisions, refreshed hashes and rolling
+  history, and retained the newest five portable release entries.
+- README.md, AGENTS.md, CLAUDE.md, PROJECT_CONTEXT.md, index.html, llms.txt,
+  sitemap.xml, search-audit.config.json, CITATION.cff, and
+  .codex-plugin/plugin.json: Updated evaluation counts, version metadata,
+  stable-release references, and dated search surfaces for 6.3.0.
+- skill-provenance.skill: Rebuilt the Claude Settings ZIP from the canonical
+  6.3.0 bundle.
 
 ## 6.2.0 - 2026-08-28
 - skill-provenance/SKILL.md, skill-provenance/README.md, and
@@ -629,3 +738,41 @@ to limit package weight. Older history remains here in the repo root.
 
 ## 1.0.0 — 2026-02-09
 - Initial public release of the skill-versioning metaskill.
+
+## Unreleased - 2026-09-08
+- assistant-guide.txt, assistant-guide-manifest.txt, and
+  .github/scripts/release-surface-check.sh: Added root trust mirrors for the
+  served GuideCheck files and enforce byte parity at the release surface.
+  The canonical skill bundle and `.skill` archive remain unchanged.
+
+## Unreleased - 2026-09-12
+- docs/state-of-skill-versioning-2026.md: Added the observer's dated signed
+  manifests, signing key, and full history endpoint as sources, recorded that
+  the manifests cannot retroactively freeze the 2026-08-27 figure, and
+  recorded a 2026-09-12 recompute of 66 of 1,203 unchanged labels that does
+  not reproduce the reported 14.2 percent. The canonical skill bundle and
+  `.skill` archive remain unchanged.
+
+## Unreleased - 2026-09-23
+- index.html, README.md, and docs/state-of-skill-versioning-2026.md: Replaced
+  the unreproduced 14.2 percent drift figure with the observer-confirmed 66 of
+  1,210 (5.5 percent) to 2026-09-13, recorded the observer's recipe, the 839
+  retracted events, a 2026-09-24 recompute on the mutable history, and
+  verification that the per-file `url` and `eventId` gaps are closed. Refs #4.
+- index.html and sitemap.xml: Corrected the platform stat to 4 tested of 8
+  supported, matching the README platform table, and aligned the visible
+  update date, JSON-LD dateModified, article modified time, and sitemap lastmod.
+- index.html: Contained the comparison table and before/after panels at 768px
+  and below so the page no longer scrolls horizontally on phones (observed
+  595px document width at a 375px viewport before the fix, none after).
+  The canonical skill bundle and `.skill` archive remain unchanged.
+- index.html: Updated the ClawHub download signal to 1,700+ (1.7k all-time
+  observed 2026-09-24) and removed the ProSkills 8.41/10 score, which dates
+  from 2026-04-08 and has no current listing to verify against.
+- README.md: Stated the governability rationale in "What problem it solves"
+  without claiming safety.
+- docs/standards-integration-status.md and ROADMAP.md: Added a dated
+  standards integration status note covering agentskills#46, #254, #380, and
+  AI Catalog, the smallest unresolved gap, and the minimal provenance
+  contract, including the observed limit that unlisted extra files are not
+  detected by the current validator.

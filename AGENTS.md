@@ -11,8 +11,8 @@ skill-provenance/                ← Canonical source bundle (DO NOT rename)
 ├── README.md                    ← Human-facing user guide (has internal version header)
 ├── MANIFEST.yaml                ← File inventory: roles, versions, SHA-256 hashes
 ├── CHANGELOG.md                 ← Recent in-bundle change history (last 5 entries)
-├── evals.json                   ← 41 core evaluation scenarios
-├── evals-distribution.json      ← 18 supplemental distribution evals
+├── evals.json                   ← 43 core evaluation scenarios
+├── evals-distribution.json      ← 21 supplemental distribution evals
 ├── validate.sh                  ← Bash script for local hash verification
 ├── package.sh                   ← Bash script for derived strict/ClawHub outputs
 └── references/standalone-verification.md ← No-plugin verify/bootstrap path
@@ -93,4 +93,6 @@ cd skill-provenance
 ./validate.sh --update # Recompute hashes after edits
 ```
 
-Exit code 0 means clean. Exit code 1 means mismatches or missing files. Exit code 2 means MANIFEST.yaml not found.
+Exit code 0 means clean. Exit code 1 means mismatches, missing files, or unlisted files. Exit code 2 means MANIFEST.yaml not found.
+
+Every file beneath the bundle root except `MANIFEST.yaml` must be listed. When adding a file to the bundle, add its manifest entry before running `--update`; update mode never adds unlisted files.

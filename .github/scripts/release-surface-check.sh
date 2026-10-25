@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 # Verify release-facing surfaces that are easy to let drift.
-# Dependencies: bash, awk, shasum or sha256sum, wc, unzip.
+# Dependencies: bash, awk, shasum or sha256sum, wc, unzip, sort, dirname,
+# mktemp, cmp, and diff.
 
 set -euo pipefail
 
@@ -98,6 +99,11 @@ check_assistant_guide_manifest() {
   [ "$guide_hash" = "$manifest_hash" ] || fail "assistant guide hash drift: manifest $manifest_hash, actual $guide_hash"
   [ "$guide_bytes" = "$manifest_bytes" ] || fail "assistant guide byte drift: manifest $manifest_bytes, actual $guide_bytes"
 
+  cmp -s .well-known/assistant-guide.txt assistant-guide.txt ||
+    fail "root assistant guide mirror differs from served guide"
+  cmp -s .well-known/assistant-guide-manifest.txt assistant-guide-manifest.txt ||
+    fail "root assistant guide manifest mirror differs from served manifest"
+
   for key in guide-version immutable-release-url profile profile-version canonical-url repository-url; do
     [ -n "$(manifest_value "$key")" ] || fail "assistant guide manifest missing $key"
   done
@@ -122,6 +128,9 @@ check_standalone_verifier() {
   [ "$actual_validator_hash" = "$pinned_validator_hash" ] ||
     fail "standalone verifier pin drift: wrapper $pinned_validator_hash, validator $actual_validator_hash"
 
+  grep -Fq "VALIDATOR_SHA256=\\\"${actual_validator_hash}\\\"" search-audit.config.json ||
+    fail "search-audit.config.json verify.sh contract does not pin validator $actual_validator_hash"
+
   grep -q '^VALIDATOR_SOURCE_URL="https://raw.githubusercontent.com/snapsynapse/skill-provenance/main/skill-provenance/validate.sh"$' verify.sh ||
     fail "verify.sh canonical validator URL drift"
 
@@ -132,7 +141,11 @@ check_standalone_verifier() {
 check_skill_zip() {
   local archive="skill-provenance.skill"
   local archive_listing
+  local expected_listing
+  local expected_file
+  local actual_file
   local path
+  local dir
   local archived_hash
   local source_hash
 
@@ -142,6 +155,38 @@ check_skill_zip() {
 
   printf '%s\n' "$archive_listing" | grep -Fx "skill-provenance/" >/dev/null ||
     fail "$archive does not contain the canonical skill-provenance/ directory"
+
+  expected_file="$(mktemp "${TMPDIR:-/tmp}/skill-provenance-expected.XXXXXX")"
+  actual_file="$(mktemp "${TMPDIR:-/tmp}/skill-provenance-actual.XXXXXX")"
+  trap 'rm -f "$expected_file" "$actual_file"' EXIT
+
+  {
+    printf '%s\n' "skill-provenance/" "skill-provenance/MANIFEST.yaml"
+    while IFS= read -r path; do
+      [ -n "$path" ] || continue
+      printf '%s\n' "skill-provenance/$path"
+      dir="$(dirname "$path")"
+      while [ "$dir" != "." ]; do
+        printf '%s\n' "skill-provenance/$dir/"
+        dir="$(dirname "$dir")"
+      done
+    done < <(
+      awk '
+        /^[[:space:]]*-[[:space:]]*path:[[:space:]]*/ {
+          line = $0
+          sub(/^[[:space:]]*-[[:space:]]*path:[[:space:]]*/, "", line)
+          print line
+        }
+      ' skill-provenance/MANIFEST.yaml
+    )
+  } | sort -u > "$expected_file"
+
+  printf '%s\n' "$archive_listing" | sort -u > "$actual_file"
+  if ! cmp -s "$expected_file" "$actual_file"; then
+    echo "ERROR: $archive inventory differs from the canonical bundle" >&2
+    diff -u "$expected_file" "$actual_file" >&2 || true
+    exit 1
+  fi
 
   while IFS= read -r path; do
     [ -n "$path" ] || continue
@@ -160,6 +205,9 @@ check_skill_zip() {
       }
     ' skill-provenance/MANIFEST.yaml
   )
+
+  rm -f "$expected_file" "$actual_file"
+  trap - EXIT
 
   echo ".skill archive matches canonical bundle"
   echo ".skill SHA-256: $(sha256_hash "$archive")"
