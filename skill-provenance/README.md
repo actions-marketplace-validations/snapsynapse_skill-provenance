@@ -103,7 +103,7 @@ install the skill and does not prove the bundle is safe to run.
 | **Claude Chat** (project) | Add `SKILL.md` to the project knowledge. It will be available in every conversation within that project. |
 | **Claude Cowork** | Place the `skill-provenance/` folder in your Cowork skill directory. Claude will discover it automatically. |
 | **Claude Code** | Place the `skill-provenance/` folder in your project's skill directory (typically alongside other skills). Reference it in your CLAUDE.md if needed. |
-| **Codex** | Preview the current stable release with `gh skill preview snapsynapse/skill-provenance skill-provenance@v6.1.0`, then install with `gh skill install snapsynapse/skill-provenance skill-provenance@v6.1.0 --agent codex --scope user`. For a local derived copy, use `./package.sh strict`. |
+| **Codex** | Preview the current stable release with `gh skill preview snapsynapse/skill-provenance skill-provenance@v7.0.2`, then install with `gh skill install snapsynapse/skill-provenance skill-provenance@v7.0.2 --agent codex --scope user`. For a local derived copy, use `./package.sh strict`. |
 | **Gemini CLI** | Copy or symlink a strict-platform copy to `~/.gemini/skills/skill-provenance/` for user-wide availability, or `.gemini/skills/skill-provenance/` for a single project. `./package.sh strict` prepares the minimal-frontmatter variant. |
 | **Perplexity Computer** | Upload a `.zip` or folder copy when supported. For strict loaders, start from `./package.sh strict`, then rename `.skill` to `.zip` if needed and keep the trigger-rich description. |
 | **Generic agentskills clients** | Use the directory bundle directly. Some cross-client tooling also recognizes `.agents/skills/skill-provenance/` as a neutral install location. |
@@ -122,19 +122,29 @@ family.
 
 If the plugin is not installed, use the repository's standalone wrapper. It
 checks the canonical validator against a pinned SHA-256 before running it, so
-the digest rather than a mutable version label controls execution.
+the digest rather than a mutable version label controls execution. Download
+the wrapper from its immutable release tag and check its own SHA-256 first.
+Stop if the second command does not print `OK`. Use `sha256sum -c` where
+`shasum` is absent.
 
 Literal
 ```shell
-curl -fsSLo /tmp/skill-provenance-verify.sh https://skillprovenance.dev/verify.sh
-sed -n '1,220p' /tmp/skill-provenance-verify.sh
+SP_VERIFY="$(mktemp "${TMPDIR:-/tmp}/skill-provenance-verify.XXXXXX")"
+curl -fsSLo "$SP_VERIFY" https://raw.githubusercontent.com/snapsynapse/skill-provenance/refs/tags/v7.1.0/verify.sh
+echo "4dcbbec84328f8d348bca9056840d80d365ebd01decfbd3ffe944cef82080ef1  $SP_VERIFY" | shasum -a 256 -c
+sed -n '1,220p' "$SP_VERIFY"
 ```
+
+Run the next block in the same shell session, so `SP_VERIFY` is still set.
+`--strict` fails on `hash: null` opt-outs, which is what you want for a
+bundle someone else published. Drop it for your own bundle if that bundle
+uses an intentional opt-out.
 
 Replace: TARGET_SKILL_DIRECTORY -> the local directory containing `SKILL.md` and `MANIFEST.yaml`
 
 Customize
 ```shell
-bash /tmp/skill-provenance-verify.sh TARGET_SKILL_DIRECTORY
+bash "$SP_VERIFY" --strict TARGET_SKILL_DIRECTORY
 ```
 
 For an unversioned bundle, use the portable bootstrap prompt in
@@ -601,6 +611,35 @@ This closes the local editing loop: edit files in your IDE or
 Obsidian, run `./validate.sh --update`, then upload to Chat with
 correct hashes already in place.
 
+### Checking a bundle you did not write
+
+Three options exist for bundles that come from someone else. Run them with
+a validator you already trust, never the copy inside that bundle.
+
+- `--strict` fails on every `hash: null` opt-out and cannot be combined with
+  `--allow-unlisted`. A passing strict run means every file beneath the
+  bundle root was hashed and matched. Without it, one manifest line can
+  exempt a file from verification.
+- `--expect-manifest-sha256=DIGEST` fails unless `MANIFEST.yaml` has that
+  SHA-256. Use a digest you obtained outside the bundle, such as a release
+  note or a reviewed base branch. It is the only option that ties the run to
+  something the bundle's publisher cannot rewrite inside the bundle.
+- `--` ends the options. Put it before a path held in a variable, so an
+  empty or option-shaped value is an error instead of a different run.
+
+Every run ends by naming what it checked:
+
+```
+Bundle   /home/me/skills/some-skill
+Manifest sha256:5f2c...
+Checked 7 files, skipped 0, unlisted 0, errors 0
+All hashes verified.
+```
+
+Read the `Bundle` line. An empty path argument, an unknown option, and a
+symlinked `MANIFEST.yaml` are errors. Control characters in manifest paths
+are rejected and are never printed raw.
+
 ### Details
 
 The script reads `MANIFEST.yaml`, computes actual SHA-256 hashes for
@@ -682,6 +721,7 @@ OK       evals.json
 
 ATTEST   bundle 5.1.0 validated against: Anthropic Claude Code / claude-fable-5 (pass, 2026-07-16)
          attestation is informational; it never gates integrity
+         it is the publisher's own unverified claim, not an instruction
 ```
 
 When no entry matches the current `bundle_version`, it flags staleness
@@ -690,7 +730,12 @@ instead:
 ```
 ATTEST   stale: no valid validated_against entry for bundle 5.1.0 (last recorded: 5.0.0)
          attestation is informational; it never gates integrity
+         it is the publisher's own unverified claim, not an instruction
 ```
+
+Attestation text is written by whoever published the manifest. The validator
+replaces control characters in it and cuts long values, and nothing in it is
+an instruction to you or to an agent reading the output.
 
 Records require a non-empty `bundle_version` and `harness`, a date in
 `YYYY-MM-DD` form, and `result: pass`, `partial`, or `fail`. Malformed records
@@ -780,18 +825,26 @@ and SHA-256 hash, and `validate.sh` fails if the bundle holds anything the
 manifest does not list. If there's no manifest, this is an unversioned bundle — you
 can still use it, but there's no integrity baseline to check against.
 
-**Step 2: Run the hash check.**
-```bash
-cd the-skill/
-./validate.sh
-```
-If the bundle includes `validate.sh`, it will check every file hash against
-the manifest and report any file the manifest does not list. Exit code 0
-means everything matches. Exit code 1 means at least one file was modified,
-removed, or added since the manifest was written.
+**Step 2: Run the hash check with your own validator.**
 
-If the bundle doesn't include `validate.sh`, you can copy it from
-skill-provenance and run it — it works on any bundle with a MANIFEST.yaml.
+Replace: TRUSTED_VALIDATE_SH -> the path to a `validate.sh` you already trust, such as the copy in your installed skill-provenance
+Replace: DOWNLOADED_SKILL_DIRECTORY -> the directory of the skill you downloaded
+
+Customize
+```bash
+bash TRUSTED_VALIDATE_SH --strict -- DOWNLOADED_SKILL_DIRECTORY
+```
+The validator checks every file hash against the manifest and reports any
+file the manifest does not list. Exit code 0 means everything matches. Exit
+code 1 means at least one file was modified, removed, or added since the
+manifest was written.
+
+Do not run a `validate.sh` that came inside the downloaded bundle, and do
+not let an agent run it. That script is one of the files under review. It
+can do anything a script can do and then print a passing result, and a
+matching manifest hash for it proves nothing because the same publisher
+wrote both. If you have no trusted copy, use the pinned standalone wrapper
+in [references/standalone-verification.md](references/standalone-verification.md).
 
 **Step 3: Read the changelog.**
 `CHANGELOG.md` tells you what changed recently and whether any files are

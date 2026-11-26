@@ -13,8 +13,16 @@
   toolmaker interop, keeping reported observations distinct from live metrics.
   Current thread state, the smallest unresolved gap, and the minimal
   provenance contract are in `docs/standards-integration-status.md`.
-- Pin third-party GitHub Actions to immutable commits and design proportional
-  `main` branch governance in separately reviewed changes.
+- `main` branch governance is in place as of 2026-11-22: a ruleset requires
+  a pull request, the `validate` check, and signed commits, and blocks force
+  pushes and deletion, with no bypass actors. Third-party GitHub Actions are
+  pinned to immutable commits as of 2026-11-08. The 7.1.0
+  release closed the validator items from the 2026-11-22 audit, and
+  GuideCheck guide 1.4.0 pins the release it verifies. Still open: build
+  release assets in CI with provenance, run the adversarial agent evals
+  against a model and record the result, and publish the guide hash as a
+  DNS TXT anchor at `_assistant-guide.skillprovenance.dev` so the guide
+  reaches GuideCheck Level 4 under profile 2.0.0.
 
 ## Adoption evidence gate
 
@@ -34,9 +42,9 @@ parallel monitoring or packaging system.
   verify from a clean download.
 - **Registry and package-manager interop**: Preserve portable bundle identity
   while leaving install resolution and consumer lockfiles to their owners.
-- **Signing and citation publication**: Sign future commits and release tags
-  after account-level setup. Consider one Zenodo record only after choosing
-  the archival subject; add a DOI to `CITATION.cff` only after it resolves.
+- **Citation publication**: Commits and bundle release tags are SSH-signed
+  as of v7.0.0. Consider one Zenodo record only after choosing the archival
+  subject; add a DOI to `CITATION.cff` only after it resolves.
 - **OpenSSF programs**: Re-run Scorecard after material gaps are addressed and
   begin Best Practices review only after the release-provenance story is
   coherent. Do not publish a badge from the 2026-09-05 local baseline.

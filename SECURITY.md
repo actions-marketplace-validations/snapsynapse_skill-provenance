@@ -35,6 +35,10 @@ The public GuideCheck assistant guide at
 pre-install verification instructions plain-text, bounded, and reviewable.
 It checks the public bundle against its manifest before install, but it
 does not certify that the bundle is safe or that the publisher is trusted.
+From guide 1.4.0 it pins one release: the tag it clones, the commit that tag
+names, the validator bytes it runs, and the manifest digest the validator
+must see. A change to the repository after that release cannot change what
+the guide runs or accepts without a check failing.
 
 The sidecar manifest at
 `https://skillprovenance.dev/.well-known/assistant-guide-manifest.txt`
@@ -42,6 +46,31 @@ publishes the guide hash, byte count, immutable release URL, and source
 repository anchor. Release preparation should verify that those values
 match the current assistant guide before publishing or announcing a guide
 update.
+
+The validator that judges a bundle must not come from that bundle. A
+`validate.sh` shipped inside a bundle someone else published is one of the
+files under review. Running it executes that publisher's code and lets it
+print any result. Use the validator from an installed copy of this skill or
+plugin, or the standalone wrapper fetched from an exact release tag and
+checked against its published SHA-256.
+
+## Repository governance
+
+As of 2026-11-22 the `main` branch has a ruleset with no bypass actors.
+Changes arrive by pull request, the `validate` check must pass, commits must
+be signed, and force pushes and branch deletion are blocked. Release tags
+matching `v*` and `guidecheck-*` cannot be updated or deleted, and releases
+are immutable.
+
+The repository has one maintainer, so pull requests are self-merged. The
+ruleset puts CI and a signature between a stolen credential and the
+published site. It does not add a second reviewer, and an account with
+administration rights can still change the ruleset.
+
+`main` feeds GitHub Pages and plugin marketplace installs. Where a consumer
+can choose, prefer an exact release tag: the validation action, the `.skill`
+archive, the Agent Skill install commands, and the standalone wrapper
+download all name one.
 
 ## Agentic surfaces
 

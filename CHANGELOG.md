@@ -7,6 +7,250 @@ The in-bundle file at `skill-provenance/CHANGELOG.md` is the active changelog
 that travels with the skill bundle and keeps only the five most recent entries
 to limit package weight. Older history remains here in the repo root.
 
+## guidecheck-1.4.0 - 2026-11-22 (assistant guide only)
+Closes the last part of the audit's first High finding: the guide no longer
+clones the default branch and runs whatever validator it finds there.
+- .well-known/assistant-guide.txt and its root mirror: Guide 1.4.0 pins one
+  release. `clone-bundle` clones tag `v7.1.0` instead of the default
+  branch. A new read-only `check-release-commit` action prints the commit
+  and the guide states the one it must be
+  (`582876f7da65ece43f774f3947dbbe1cef457801`). `verify-integrity` declares
+  `exec-sha256` for `validate.sh` and runs it with `--expect-manifest-sha256`,
+  so the validator itself fails unless the manifest is the 7.1.0 one, which
+  also rules out unhashed files. `applies-to` is now `skill-provenance 7.1.0`.
+  The acceptance checklist, stop rules, task scope, and threat model say
+  what is pinned.
+- The guide and sidecar move from GuideCheck profile 0.3.0 to the current
+  profile, 2.0.0, and `verifier-conformance` now names verifier
+  `>=2.0.0, <3.0.0`. Under 2.0.0 the authority sentence "skip sandboxing"
+  became "disable sandboxing": the 2.0.0 scanner only accepts a negated
+  list whose items it recognizes, so it read the old sentence as an
+  instruction to skip approval gates. The meaning is unchanged.
+- GuideCheck reference verifier 2.0.0 result: Level 3. The one blocking
+  finding is `anchor.independent.missing`: because the guide declares
+  `manifest-url`, 2.0.0 also attempts Level 4, which needs the guide hash on
+  an independent channel. Until that exists the verifier answers
+  "Proceed? no". 1.3.0, under profile 0.3.0, was Level 2 with an
+  unpinned-script finding.
+- .well-known/assistant-guide-manifest.txt and its root mirror: guide
+  version, digest, byte count, release URL, and release date for 1.4.0.
+- .github/scripts/release-surface-check.sh: New `check_assistant_guide_pins`
+  fails unless the guide clones an exact tag, `applies-to` names that tag,
+  the stated commit is the one the tag names, and the `exec-sha256` and
+  manifest digest match the files at that tag. It reports, without failing,
+  when the guide pins an older release than the current bundle. It also
+  fails when the guide and sidecar name different profile versions, and
+  reports whether the DNS anchor at `_assistant-guide.skillprovenance.dev`
+  exists and matches the guide hash.
+- README.md, SECURITY.md, AGENTIC_SURFACES.md, ROADMAP.md, and
+  docs/release-provenance.md: Describe what the guide pins.
+- Not changed: the bundle, the validator, and the wrapper. Still open: the
+  DNS TXT anchor for the guide hash, which can only be published once this
+  guide is final. Every future bundle release now needs a matching guide
+  release to move the pin, and every guide release needs the DNS record
+  updated.
+
+## 7.1.0 - 2026-11-22
+Validator hardening release from the 2026-11-22 repository audit. It closes
+the Medium and Low findings that sit in code, and adds the checks that keep
+them closed.
+- skill-provenance/validate.sh: Added `--strict` (fails on `hash: null`,
+  cannot be combined with `--allow-unlisted`) and
+  `--expect-manifest-sha256=DIGEST` (binds the run to a manifest digest
+  obtained outside the bundle). An empty path argument and an unknown option
+  are errors; before, an empty argument fell back to the validator's own
+  directory and passed. `--` ends the options, and a relative path that
+  starts with `-` is anchored so no tool reads it as an option. A symlinked
+  root `MANIFEST.yaml` is rejected. Every control character in a manifest
+  path is rejected and report text is escaped, so a manifest cannot erase or
+  forge report lines on a terminal. Attestation text has control characters
+  replaced and is cut at 80 characters, and the report says it is the
+  publisher's unverified claim. The summary names the checked directory and
+  the manifest SHA-256. `--update` keeps the manifest's mode instead of
+  leaving 0600. Duplicate detection is one pass: a 4,000-entry manifest that
+  took over a minute now finishes in seconds. Behavior change: callers that
+  passed an empty path or used a symlinked manifest now fail.
+- skill-provenance/package.sh: Derived copies keep source file modes; the
+  validator is called with the path after `--`.
+- action.yml and new action-validate.sh: The action runs a testable entry
+  point. New inputs `strict` and `expected-manifest-sha256`, new output
+  `manifest-sha256`. The bundle path is passed after `--`, so an empty or
+  option-shaped `bundle-path` fails instead of validating the action's own
+  bundle or printing help with exit 0.
+- verify.sh: Accepts `--strict`, `--expect-manifest-sha256=DIGEST`, and `--`,
+  rejects other options, and passes the target after `--`. The validator
+  download is HTTPS only with redirect, time, and size limits. Pinned to the
+  7.1.0 validator, fetched from the `v7.1.0` tag.
+- .github/scripts/test-validate.sh, test-standalone-verify.sh, and
+  action-security-check.sh: Added a regression test for each audit finding:
+  empty and option-shaped arguments, strict mode, manifest digest binding,
+  symlinked manifest, escape sequences in manifest paths and attestation,
+  mode after update, the 4,000-entry manifest, and the action's inputs and
+  output.
+- .github/scripts/release-surface-check.sh: Fails if an agent-facing file
+  stops forbidding a bundle-supplied validator or brings back the wording
+  that told readers to run one, and fails if `skill-provenance.skill` holds
+  an entry that is not group and world readable.
+- .github/workflows/validate.yml: Job timeouts, a `validate-macos` job that
+  runs the suites under system Bash 3.2, and a `shellcheck` job. The
+  required `validate` job keeps its name.
+- .github/dependabot.yml: Weekly updates for pinned GitHub Actions.
+- scripts/adversarial-agent-evals.sh: Manual, model-agnostic eval runner
+  that hands an agent four bundles (clean, trojan validator, instruction in
+  attestation, null opt-out) and grades by canary files. Verified with
+  stand-in agents only; not yet run against a model.
+- skills/validate, skills/open, skills/close, and skill-provenance/SKILL.md:
+  Pass the path after `--`, use `--strict` for bundles someone else
+  published, and report whether a result is self-consistency or bound to an
+  out-of-band digest.
+- skill-provenance/evals.json: Added core scenarios 47
+  (`validator_output_instructions_not_followed`), 48
+  (`null_opt_out_in_third_party_bundle`), 49
+  (`green_check_is_self_consistency_only`), and 50
+  (`confirm_which_directory_was_validated`); scenario 44 names a trusted
+  validator. Coverage is now 50 core, 21 supplemental, and 71 total.
+- README.md, index.html, llms.txt, skill-provenance/README.md, and
+  skill-provenance/references/standalone-verification.md: The wrapper
+  download writes to a private temporary file, names the `v7.1.0` tag, and
+  shows the new wrapper digest. The action example pins checkout to a commit
+  and shows `strict` and the output.
+- skill-provenance/references/platforms-and-trust.md: Separates
+  self-consistency from an external anchor.
+- skill-provenance/MANIFEST.yaml, both changelogs, CITATION.cff, plugin
+  manifests, AGENTS.md, CLAUDE.md, PROJECT_CONTEXT.md, AGENTIC_SURFACES.md,
+  ROADMAP.md, docs/release-provenance.md, search-audit.config.json, and
+  skill-provenance.skill: Moved to 7.1.0. Claude Code plugin is 0.3.0. The
+  in-bundle changelog moved 6.2.0 to this file only.
+- Correction: `v7.0.2` was tagged without a GitHub release, so it has no
+  uploaded asset. docs/release-provenance.md now says so.
+- Not changed: the GuideCheck assistant guide. Pinning its clone and
+  validator needs its own `guidecheck-*` release.
+
+## 7.0.2 - 2026-11-22
+Security release from the 2026-11-22 repository audit. It closes the two
+High findings; the validator itself is unchanged.
+- skills/validate/SKILL.md, skills/open/SKILL.md, and skills/close/SKILL.md:
+  The plugin skills no longer tell the agent to prefer the bundle's own
+  `validate.sh`. They run the validator that ships with the plugin against
+  the bundle root, fall back to the pinned standalone wrapper and then to
+  manual hashing with reduced assurance, and never execute a script found
+  inside the bundle under review. A third-party bundle could previously ship
+  a script that ran arbitrary code and printed a passing result.
+- skill-provenance/SKILL.md: Same trusted-validator rule in the canonical
+  validate and open protocols. Manifest fields and validator output are
+  treated as data.
+- skill-provenance/README.md: The downloaded-skill use case runs a validator
+  the reader already trusts instead of the bundle's own script. Corrected a
+  stale `@v6.1.0` Codex install pin.
+- skill-provenance/evals.json: Added core scenario 46
+  (`bundle_supplied_validator_not_executed`). Coverage is now 46 core, 21
+  supplemental, and 67 total.
+- verify.sh: The validator download URL names the immutable `v7.0.1` release
+  tag, which carries the pinned validator bytes, instead of the `main`
+  branch. A published wrapper no longer breaks when a later release changes
+  the validator, and a change to `main` cannot alter what it fetches.
+- README.md, index.html, llms.txt, skill-provenance/README.md, and
+  skill-provenance/references/standalone-verification.md: The no-plugin
+  wrapper download names the exact `v7.0.2` tag and checks the wrapper's
+  SHA-256 before it is inspected or run. These surfaces no longer fetch the
+  wrapper from the branch-served site copy.
+- .github/scripts/release-surface-check.sh: Requires the wrapper's validator
+  URL to name an exact release tag whose `validate.sh` matches the pin, and
+  requires every wrapper download surface to name one exact tag and show the
+  current `verify.sh` SHA-256. A tag that is not published yet is accepted
+  only when it is the release being prepared.
+- search-audit.config.json: Moved the production `verify.sh` contract to the
+  tag URL, and the install and release links to v7.0.2.
+- skill-provenance/MANIFEST.yaml: Bumped the bundle to 7.0.2, advanced
+  SKILL.md, README.md, standalone-verification.md, evals.json, and
+  CHANGELOG.md revisions, refreshed notes and hashes, and recorded the 7.0.2
+  validated_against entry.
+- skill-provenance/CHANGELOG.md: Added the 7.0.2 entry and retained the
+  newest 5 releases, moving 6.1.0 to this file only.
+- README.md, index.html, and llms.txt: Moved the stable install, preview,
+  action, trial, and release links from v7.0.1 to v7.0.2, refreshed the
+  trial output from a real run, and updated eval counts.
+- CITATION.cff and .codex-plugin/plugin.json: Set version 7.0.2 and the
+  2026-11-22 release date.
+- .claude-plugin/plugin.json: Bumped the plugin to 0.2.2 so installed copies
+  pick up the corrected skill instructions.
+- AGENTS.md, CLAUDE.md, and PROJECT_CONTEXT.md: Recorded 7.0.2 as the stable
+  release and the new eval counts.
+- skill-provenance.skill: Rebuilt from the canonical bundle.
+- docs/release-provenance.md: Recorded the v7.0.2 asset size and digest.
+- Not changed: `skill-provenance/validate.sh` and the GuideCheck assistant
+  guide. The guide still clones the default branch and runs that checkout's
+  validator; pinning it needs its own GuideCheck release.
+- SECURITY.md and ROADMAP.md: Recorded the trusted-validator rule, the new
+  `main` branch ruleset, and the audit items still open.
+- Repository setting, not a file: `main` gained a branch ruleset on
+  2026-11-22 (pull request required, `validate` check required, signed
+  commits required, force push and deletion blocked, no bypass actors).
+
+## 2026-11-08 - Search-audit decoder fix (repo only)
+- scripts/check-search.mjs and scripts/check-production-search.mjs:
+  Re-vendored asset version 6 from the portfolio-search-indexing-audit skill
+  (bundle 8, upstream commit f76bdef). `decode()` now decodes XML entities in
+  a single pass, so `&amp;lt;` stays `&lt;` instead of becoming `<`. This
+  resolves CodeQL `js/double-escaping` alerts 1 and 2. The repository search
+  contract remains version 4.
+- The hashed bundle is unchanged; no version bump.
+
+## 7.0.1 - 2026-11-08
+- skill-provenance/references/platforms-and-trust.md: Stated that a
+  matching `bundle_version` does not show that two copies have the same
+  contents, and that `validate.sh --update` is an author tool for recording a
+  reviewed edit, not a way to make someone else's mismatched bundle pass.
+- skill-provenance/evals.json: Added core scenarios 44
+  (`same_version_label_changed_content`) and 45
+  (`refuse_update_to_clear_mismatch`). Coverage is now 45 core, 21
+  supplemental, and 66 total.
+- skill-provenance/MANIFEST.yaml: Bumped the bundle to 7.0.1, advanced
+  evals.json, platforms-and-trust.md, and CHANGELOG.md revisions, refreshed
+  notes and hashes, and recorded the 7.0.1 validated_against entry for
+  Anthropic Claude Code with claude-opus-5-5.
+- skill-provenance/CHANGELOG.md: Added the 7.0.1 entry and retained the
+  newest 5 releases, moving 6.0.0 to this file only.
+- README.md, index.html, llms.txt, and search-audit.config.json: Moved the
+  stable install, preview, action, trial, and release links from v7.0.0 to
+  v7.0.1, and updated eval counts.
+- CITATION.cff and .codex-plugin/plugin.json: Set version 7.0.1 and the
+  2026-11-08 release date.
+- AGENTS.md, CLAUDE.md, and PROJECT_CONTEXT.md: Recorded 7.0.1 as the stable
+  release and the new eval counts.
+- skill-provenance.skill: Rebuilt from the canonical bundle.
+- .well-known/assistant-guide.txt and its root mirror: Released GuideCheck
+  guide 1.3.0. It now applies to `skill-provenance >=7.0.0, <8.0.0` (1.2.0
+  still declared `<7.0.0`) and treats unlisted entries as an incomplete
+  check, matching 7.x validation. The sidecar manifest and its mirror carry
+  the new version, digest, size, release URL, and release date.
+- docs/release-provenance.md: Recorded the v7.0.1 asset size and digest and
+  the guidecheck-1.3.0 assets.
+
+## 2026-11-08 - Actions pinning and roadmap sync (repo only)
+- .github/workflows/validate.yml and .github/workflows/production-search.yml:
+  Pinned `actions/checkout` to commit
+  11d5960a326750d5838078e36cf38b85af677262 (v4.4.0) instead of the mutable
+  `v4` tag.
+- ROADMAP.md: Marked Actions pinning done, leaving `main` branch governance
+  as the open item. Reworded the signing entry to record that commits and
+  bundle release tags are already SSH-signed; Zenodo and DOI remain open.
+- The hashed bundle is unchanged; no version bump.
+
+## 2026-11-08 - README changed-bundle trial and drift check (repo only)
+- README.md: Opened with a runnable changed-bundle trial against v7.0.0
+  (clean exit 0, changed `SKILL.md` with unchanged manifest exits 1 with
+  `MISMATCH`), a guide to checking an existing bundle, and an exit-code
+  table. Moved the tagline, adoption-report route, and dated 5.5 percent
+  observation below it.
+- .github/scripts/release-surface-check.sh: Added `check_readme_trial`,
+  which re-runs the README trial against a temporary copy of the canonical
+  bundle and fails when the displayed tag, version label, change command,
+  output lines, digests, counts, or exit codes drift from the validator.
+- AGENTS.md and CLAUDE.md: Recorded that bundle releases must refresh the
+  README trial block from a real run.
+- The hashed bundle is unchanged; no version bump.
+
 ## 2026-09-23 - 7.0.0 release surfaces
 - skill-provenance/MANIFEST.yaml: Recorded the 7.0.0 validated_against
   entry for Anthropic Claude Code with claude-opus-5-5.

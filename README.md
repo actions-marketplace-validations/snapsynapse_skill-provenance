@@ -1,12 +1,115 @@
 [![Validate bundle](https://github.com/snapsynapse/skill-provenance/actions/workflows/validate.yml/badge.svg)](https://github.com/snapsynapse/skill-provenance/actions/workflows/validate.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://github.com/snapsynapse/skill-provenance/blob/main/LICENSE)
-[![Stable bundle](https://img.shields.io/github/v/tag/snapsynapse/skill-provenance?filter=v%2A&label=bundle)](https://github.com/snapsynapse/skill-provenance/releases/tag/v7.0.0)
+[![Stable bundle](https://img.shields.io/github/v/tag/snapsynapse/skill-provenance?filter=v%2A&label=bundle)](https://github.com/snapsynapse/skill-provenance/releases/tag/v7.1.0)
 [![GitHub Marketplace](https://img.shields.io/badge/GitHub%20Marketplace-Skill%20Provenance%20Validate-blue)](https://github.com/marketplace/actions/skill-provenance-validate)
 
 # Skill Provenance
 
-Portable provenance, integrity, and drift control for Agent Skills across
-local folders, registries, platform uploads, and multi-agent sessions.
+Find out whether a skill bundle still matches the files recorded in its
+manifest.
+
+A copied skill can keep the same filename and version label after its
+instructions change. Skill Provenance checks the bundle against its recorded
+SHA-256 hashes and names the files that no longer match.
+
+## See it catch a changed file
+
+This trial checks a disposable copy of this repository's own bundle. It needs
+Git, Bash, awk, and `shasum` or `sha256sum`. It installs no plugin or skill,
+calls no model, and never runs the target `SKILL.md`; the only code it runs is
+the validator. The clone is the only network step: because `verify.sh` sits
+beside the canonical `skill-provenance/validate.sh` in the checkout, it checks
+that validator against its pinned SHA-256 and runs it locally.
+
+Get the exact v7.1.0 release, copy its bundle to a temporary directory, and
+check the copy:
+
+Literal
+```bash
+git clone --quiet https://github.com/snapsynapse/skill-provenance.git
+cd skill-provenance
+git -c advice.detachedHead=false checkout --quiet v7.1.0
+SP_TRIAL="$(mktemp -d "${TMPDIR:-/tmp}/skill-provenance-trial.XXXXXX")"
+cp -R skill-provenance "$SP_TRIAL/bundle"
+bash ./verify.sh "$SP_TRIAL/bundle"; echo "exit $?"
+```
+
+Every file matches. The output ends with:
+
+```text
+Checked 11 files, skipped 0, unlisted 0, errors 0
+All hashes verified.
+exit 0
+```
+
+Now change the copy's instructions and leave its manifest and version label
+alone:
+
+Literal
+```bash
+printf '\n<!-- Changed after the recorded manifest. -->\n' >> "$SP_TRIAL/bundle/SKILL.md"
+bash ./verify.sh "$SP_TRIAL/bundle"; echo "exit $?"
+```
+
+The output starts and ends with:
+
+```text
+MISMATCH SKILL.md
+  expected: 88280de1b904d88b34b9725a1b2f37aecd6d91f8c1a19ac1980404129a432bad
+  actual:   639466b391f8cb8b1e6e1efa5e3c6e1fe367112237ff3c00291d5362f3f1d7f6
+OK       README.md
+...
+Checked 11 files, skipped 0, unlisted 0, errors 1
+exit 1
+```
+
+The copy still says `bundle_version: 7.1.0`, and its `MANIFEST.yaml` is
+byte-identical to the released one. The validator still names `SKILL.md` as
+the file that no longer matches. Exit 1 is the detection result the trial is
+meant to show. A fresh copy from the same checkout returns to exit 0.
+
+This compares files with the supplied manifest. It does not establish who
+published the bundle, that the skill is safe, or that the manifest itself
+deserves trust. A publisher who changes both a file and the manifest can make
+them match again. See [Trust and integrity](#trust-and-integrity).
+
+Remove the trial directory when finished:
+
+Literal
+```bash
+rm -rf -- "${SP_TRIAL:?}"
+```
+
+## Check a bundle you already have
+
+From the same checkout, point the wrapper at a directory that holds a
+`SKILL.md` and `MANIFEST.yaml`. Verification reads the target and does not
+change it.
+
+Replace: TARGET_SKILL_DIRECTORY -> the directory containing the reviewed `SKILL.md` and `MANIFEST.yaml`
+
+Customize
+```bash
+bash ./verify.sh "TARGET_SKILL_DIRECTORY"; echo "exit $?"
+```
+
+Without a checkout, the standalone wrapper under [Quick install](#quick-install)
+works the same way, except that it downloads the canonical validator at run
+time and refuses to run it unless it matches the pinned SHA-256. See
+[standalone verification](skill-provenance/references/standalone-verification.md).
+
+| Result | What it establishes | Next action |
+|---|---|---|
+| Exit 0 | Every listed file matched its recorded hash and nothing unlisted was present. Files the manifest explicitly opts out of hashing stay unverified. | Read the checked, skipped, and unlisted counts. Assess source and behavior separately. |
+| Exit 1 with `MISMATCH` | A named file differs from its recorded digest. | Compare the change against a trusted reference before accepting it or recording it as a new version. |
+| Exit 1 with other findings | For example a missing file, an `UNLISTED` file, an unsafe path, or a validator that did not match the wrapper's pin. | Read the specific finding. Not every exit 1 means changed instructions. |
+| Exit 2 | The target has no `MANIFEST.yaml`, so there is no recorded state to compare. | Get the intended baseline from its publisher, or review the [bootstrap prompt](skill-provenance/references/standalone-verification.md#bootstrap-without-installing-the-plugin) as a separate choice. Bootstrapping records current contents; it does not prove them. |
+
+Version labels identify a release; digests detect changed content. A matching
+hash does not show that the labeled version is the newest, that the source is
+genuine, or that the skill is safe. `ATTEST` lines report which agent last
+validated the bundle; they are informational and never change the integrity
+verdict.
 
 Use Skill Provenance in a project? Submit a
 [compatibility or adoption report](https://github.com/snapsynapse/skill-provenance/issues/new?template=compatibility-report.yml).
@@ -19,6 +122,10 @@ and download counts are not overstated as verified use.
 Teams that build, distribute, or run Agent Skills across multiple surfaces and need to know a bundle is the version they trust and hasn't silently drifted.
 
 ## What problem it solves
+
+Skill Provenance provides portable provenance, integrity, and drift control
+for Agent Skills across local folders, registries, platform uploads, and
+multi-agent sessions.
 
 Agent Skills move across local folders, registries, and platform uploads with no portable way to verify version, integrity, or drift. Skill Provenance makes a bundle's identity and integrity travel with it.
 
@@ -98,12 +205,12 @@ the bundle before install, but does not install anything for you.
 
 **GitHub CLI (Codex and other supported agents):**
 
-Preview the current stable v7.0.0 release before installing it.
+Preview the current stable v7.1.0 release before installing it.
 
 Literal
 ```shell
-gh skill preview snapsynapse/skill-provenance skill-provenance@v7.0.0
-gh skill install snapsynapse/skill-provenance skill-provenance@v7.0.0 --agent codex --scope user
+gh skill preview snapsynapse/skill-provenance skill-provenance@v7.1.0
+gh skill install snapsynapse/skill-provenance skill-provenance@v7.1.0 --agent codex --scope user
 ```
 
 This repository publishes two release tag families. Bundle releases use
@@ -117,20 +224,29 @@ packaging. Its presence does not imply that a public plugin listing exists.
 
 **No plugin required:**
 
-Download and inspect the standalone wrapper. It verifies the canonical
-validator against a pinned SHA-256 before running it.
+Download the standalone wrapper from its immutable release tag, check its
+SHA-256, and inspect it. Stop if the second command does not print `OK`. Use
+`sha256sum -c` where `shasum` is absent. The wrapper then verifies the
+canonical validator against a pinned SHA-256 before running it.
 
 Literal
 ```shell
-curl -fsSLo /tmp/skill-provenance-verify.sh https://skillprovenance.dev/verify.sh
-sed -n '1,220p' /tmp/skill-provenance-verify.sh
+SP_VERIFY="$(mktemp "${TMPDIR:-/tmp}/skill-provenance-verify.XXXXXX")"
+curl -fsSLo "$SP_VERIFY" https://raw.githubusercontent.com/snapsynapse/skill-provenance/refs/tags/v7.1.0/verify.sh
+echo "4dcbbec84328f8d348bca9056840d80d365ebd01decfbd3ffe944cef82080ef1  $SP_VERIFY" | shasum -a 256 -c
+sed -n '1,220p' "$SP_VERIFY"
 ```
+
+Run the next block in the same shell session, so `SP_VERIFY` is still set.
+`--strict` fails on `hash: null` opt-outs, which is what you want for a
+bundle someone else published. Drop it for your own bundle if that bundle
+uses an intentional opt-out.
 
 Replace: TARGET_SKILL_DIRECTORY -> the local directory containing `SKILL.md` and `MANIFEST.yaml`
 
 Customize
 ```shell
-bash /tmp/skill-provenance-verify.sh TARGET_SKILL_DIRECTORY
+bash "$SP_VERIFY" --strict TARGET_SKILL_DIRECTORY
 ```
 
 For an unversioned bundle, use the portable prompt in
@@ -150,7 +266,7 @@ After install, five commands are available:
 - `/skill-provenance:bootstrap` — add version tracking to an unversioned bundle
 
 **Claude (Settings UI):**
-Download `skill-provenance.skill` from the [stable v7.0.0 bundle release](https://github.com/snapsynapse/skill-provenance/releases/tag/v7.0.0) and install:
+Download `skill-provenance.skill` from the [stable v7.1.0 bundle release](https://github.com/snapsynapse/skill-provenance/releases/tag/v7.1.0) and install:
 `claude.ai` -> Profile icon -> `Settings` -> `Skills` -> `Add Skill` -> select the file.
 
 If your loader only accepts `.zip` or `.md` uploads, rename
@@ -174,11 +290,21 @@ directory bundle can be placed there when you want a neutral install path.
 **[GitHub Actions Marketplace](https://github.com/marketplace/actions/skill-provenance-validate):**
 ```yaml
 steps:
-  - uses: actions/checkout@v4
-  - uses: snapsynapse/skill-provenance@v7.0.0
+  - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+  - id: provenance
+    uses: snapsynapse/skill-provenance@v7.1.0
     with:
       bundle-path: skill-provenance
+      strict: true
+  - run: echo "Checked manifest ${{ steps.provenance.outputs.manifest-sha256 }}"
 ```
+
+`strict: true` fails on `hash: null` opt-outs. `expected-manifest-sha256`
+takes a digest you recorded outside the bundle and fails the run when the
+manifest differs. A green check without it means the files agree with the
+manifest in the same commit, which a pull request can change together. Pin
+third-party actions to a commit, as the checkout line shows; a release tag
+of this action is immutable, and a commit SHA is stricter still.
 
 Then tell the agent:
 > "Use the skill-provenance skill to bootstrap this bundle."
@@ -240,7 +366,10 @@ Skill Provenance publishes a GuideCheck `assistant-guide.txt` at
 [https://skillprovenance.dev/.well-known/assistant-guide.txt](https://skillprovenance.dev/.well-known/assistant-guide.txt).
 It is a plain-text, approval-gated guide for fetching this repository and
 running the local manifest integrity check. It is useful when you want an
-assistant to help verify the public bundle before you install it.
+assistant to help verify the public bundle before you install it. It clones
+an exact release tag, checks the release commit, pins the validator's bytes,
+and makes the validator fail unless the manifest has the digest the guide
+states. It never runs code from the default branch.
 
 Conformance is not safety. The guide and manifest confirm form and
 integrity, not publisher intent or runtime safety. Read the guide before
@@ -283,8 +412,8 @@ Literal
 
 This repo-level check confirms declared eval counts, the standalone validator
 pin, release tag-family separation, the GuideCheck sidecar hash and byte
-metadata, and `skill-provenance.skill` contents all match the current source
-tree. It is a release-confidence check, not a trust anchor.
+metadata, the output shown in the changed-bundle trial above, and
+`skill-provenance.skill` contents all match the current source tree. It is a release-confidence check, not a trust anchor.
 
 **What the manifest tells you:**
 - Which files belong to the bundle (and which are missing)
@@ -351,7 +480,7 @@ skill-provenance/                <- Canonical source bundle (metadata mode)
   README.md                      <- User guide: workflows, worked example, troubleshooting
   MANIFEST.yaml                  <- File inventory with roles, versions, hashes
   CHANGELOG.md                   <- Recent in-bundle history (last 5 entries)
-  evals.json                     <- 43 core evaluation scenarios
+  evals.json                     <- 50 core evaluation scenarios
   evals-distribution.json        <- 21 supplemental packaging/deployment/integrity evals
   validate.sh                    <- Local hash verification script
   package.sh                     <- Zero-dependency helper for derived copies
@@ -365,7 +494,7 @@ The directory is the canonical cross-platform source bundle. The `.skill` file i
 
 ## Evals
 
-64 evaluation scenarios across two files: 43 core workflow evals in
+71 evaluation scenarios across two files: 50 core workflow evals in
 [evals.json](skill-provenance/evals.json) and 21 supplemental
 distribution/package/integrity evals in
 [evals-distribution.json](skill-provenance/evals-distribution.json).
